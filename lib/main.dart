@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gate_pass_management/feature/admin/view/admin_dashboard_view.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/view/login_signup_view.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';

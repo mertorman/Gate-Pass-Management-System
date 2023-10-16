@@ -56,7 +56,7 @@ class StatsWidget extends StatelessWidget {
                       ),
                       Text(
                         "$title",
-                        style: GoogleFonts.poppins(color: Colors.white),
+                        style: GoogleFonts.poppins(color: Colors.white,fontSize: 13),
                       )
                     ],
                   ),

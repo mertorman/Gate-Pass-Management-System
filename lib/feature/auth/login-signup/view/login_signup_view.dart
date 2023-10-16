@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/loginWidget.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/signupWidget.dart';
