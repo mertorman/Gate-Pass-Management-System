@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/admin/view/admin_dashboard_view.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/view/login_signup_view.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 void main() async{
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
        builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: AdminDashboard(),
+      home: const LoginPage(),
     );
   }
 }

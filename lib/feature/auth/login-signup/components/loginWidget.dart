@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gate_pass_management/feature/admin/view/admin_dashboard_view.dart';
+//import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:nb_utils/nb_utils.dart' ;
 
 // ignore: must_be_immutable
 class LoginWidget extends StatelessWidget {
@@ -67,7 +69,13 @@ class LoginWidget extends StatelessWidget {
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return AdminDashboard();
+                },
+              ));
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
