@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/admin/view/admin_dashboard_view.dart';
+import 'package:gate_pass_management/feature/user/view/user_view.dart';
 //import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nb_utils/nb_utils.dart' ;
+import 'package:nb_utils/nb_utils.dart';
 
 // ignore: must_be_immutable
-class LoginWidget extends StatelessWidget {
+class LoginWidget extends StatefulWidget {
   LoginWidget({super.key, required this.pageController});
   PageController pageController;
+
+  @override
+  State<LoginWidget> createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
+  TextEditingController email = TextEditingController();
+
+  TextEditingController password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,6 +38,7 @@ class LoginWidget extends StatelessWidget {
                 20.width,
                 Expanded(
                     child: TextField(
+                  controller: email,
                   decoration: InputDecoration(
                       hintText: "Enter email", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -51,6 +63,8 @@ class LoginWidget extends StatelessWidget {
                 20.width,
                 Expanded(
                     child: TextField(
+                      obscureText: true,
+                      controller: password,
                   decoration: InputDecoration(
                       hintText: "Enter password", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -70,11 +84,20 @@ class LoginWidget extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
+              if(email.text=="admin@gmail.com" && password.text == "123456"){
+                Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return AdminDashboard();
                 },
               ));
+              }else{
+                Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return UserPage();
+                },
+              ));
+              }
+              
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +134,7 @@ class LoginWidget extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
             onPressed: () {
-              pageController.nextPage(
+              widget.pageController.nextPage(
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeInOut);
             },

@@ -26,6 +26,7 @@ class StatsWidget extends StatelessWidget {
           padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 width: 33,
@@ -38,7 +39,6 @@ class StatsWidget extends StatelessWidget {
                   color: color,
                 ),
               ),
-              24.height,
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
