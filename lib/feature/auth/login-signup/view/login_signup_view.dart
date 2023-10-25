@@ -6,6 +6,7 @@ import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:rive/rive.dart' as rv;
+import 'package:kartal/kartal.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                     text: "Easy",
                     style: GoogleFonts.poppins(
                         fontSize: 25,
-                        color: Color(0xFF8186dd),
+                        color: AppColors.primaryColor.withOpacity(0.9),
                         fontWeight: FontWeight.bold))
               ]))),
           // backgroundColor: Colors.transparent,
@@ -65,24 +66,32 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              AppImages.loginImage,
-                              height: context.height() * 0.3,
-                              width: context.width() * 0.55,
+                            AnimatedContainer(
+                              duration: Duration(milliseconds: 300),
+                              height: context.general.isKeyBoardOpen ? MediaQuery.of(context).size.height * 0.25 : MediaQuery.of(context).size.height * 0.3,
+                              width: context.general.isKeyBoardOpen ?MediaQuery.of(context).size.width * 0.5 : MediaQuery.of(context).size.width * 0.55,
+                              child: Image.asset(
+                                AppImages.loginImage,
+                                
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 20),
                               child: SizedBox(
-                                width: context.width() * 0.38,
+                                width: MediaQuery.of(context).size.width * 0.38,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Welcome\nBack",
+                                    AnimatedDefaultTextStyle(
+                                      duration: Duration(milliseconds: 300),
                                       style: GoogleFonts.poppins(
-                                          fontSize: 25,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                                            fontSize: context.general.isKeyBoardOpen ? 22 : 25,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      child: Text(
+                                        "Welcome\nBack",
+                                        
+                                      ),
                                     ),
                                     10.height,
                                     Text(

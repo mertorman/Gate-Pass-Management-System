@@ -29,10 +29,8 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const NavigationBarBottom(),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffF9F9F9),
-      appBar: const AppBarWidget(),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(24),

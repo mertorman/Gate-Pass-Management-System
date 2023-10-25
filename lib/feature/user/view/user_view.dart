@@ -18,8 +18,6 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(),
-      bottomNavigationBar: NavigationBarBottom(),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffF9F9F9),
       body: SingleChildScrollView(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/admin/model/stats_model.dart';
 import 'package:gate_pass_management/feature/components/bottom_navigation_bar.dart';
 import 'package:gate_pass_management/feature/components/stats_component.dart';
+import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../components/appbar_component.dart';
@@ -20,10 +21,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: NavigationBarBottom(),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffF9F9F9),
-      appBar: AppBarWidget(),
       body: SingleChildScrollView(
           child: SafeArea(
               child: Padding(
@@ -63,7 +62,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       child: Text(
                         "View All",
                         style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600, fontSize: 14),
+                            fontWeight: FontWeight.w600, fontSize: 14,color: AppColors.primaryColor),
                       ),
                     )
                   ],

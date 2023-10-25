@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:gate_pass_management/feature/auth/login-signup/view/login_signup_view.dart';
 import 'package:gate_pass_management/feature/door-management/view/door_management_view.dart';
-
+import 'package:gate_pass_management/feature/main-wrapper/main_wrapper.dart';
+import 'package:gate_pass_management/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -32,7 +32,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DoorManagementPage()
+      home: MainWrapper(),
+      //initialRoute: "/login",
+     // getPages: AppRoutes.routes,
     );
   }
 }

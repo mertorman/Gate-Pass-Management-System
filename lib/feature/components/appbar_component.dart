@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -24,7 +25,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
           "ParkEasy",
           style: GoogleFonts.robotoSlab(
               textStyle: const TextStyle(
-                  color: Color(0xFF8186dd),
+                  color: AppColors.primaryColor,
                   fontSize: 25,
                   fontWeight: FontWeight.bold)),
         ),
@@ -37,7 +38,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
             width: 35,
             height: 35,
             decoration: BoxDecoration(
-                color: Color(0xFF8186dd).withOpacity(0.9),
+                color: AppColors.primaryColor.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(8)),
             alignment: Alignment.center,
             child: const Icon(
