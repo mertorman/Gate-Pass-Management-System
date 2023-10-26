@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gate_pass_management/feature/auth/login-signup/view/login_signup_view.dart';
-import 'package:gate_pass_management/feature/door-management/view/door_management_view.dart';
-import 'package:gate_pass_management/feature/main-wrapper/main_wrapper.dart';
 import 'package:gate_pass_management/routes/routes.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-void main() async{
+
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   await initialize();
   runApp(const MyApp());
 }
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-       builder: (context, child) => ResponsiveBreakpoints.builder(
+      builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         breakpoints: [
           const Breakpoint(start: 0, end: 450, name: MOBILE),
@@ -32,10 +33,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MainWrapper(),
-      //initialRoute: "/login",
-     // getPages: AppRoutes.routes,
+      //home: MainWrapper(),
+      initialRoute: "/login",
+      getPages: AppRoutes.routes,
     );
   }
 }
-

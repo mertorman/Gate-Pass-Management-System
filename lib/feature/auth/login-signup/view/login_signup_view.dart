@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/loginWidget.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/signupWidget.dart';
+import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/product/constant/constants.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:rive/rive.dart' as rv;
@@ -17,11 +19,12 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final PageController pageController = PageController(initialPage: 0);
-  
+  AuthController authController = Get.put(AuthController());
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(gradient: LinearGradient(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
               begin: Alignment.topCenter,
               colors: [Color(0XFF8BC6EC), Color(0XFF9599E2)])),
       child: Scaffold(
@@ -51,7 +54,9 @@ class _LoginPageState extends State<LoginPage> {
               rv.RiveAnimation.asset("assets/riveassets/shapes.riv"),
               Positioned.fill(
                   child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 10),child: SizedBox(),)),
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 10),
+                child: SizedBox(),
+              )),
               SingleChildScrollView(
                 child: SafeArea(
                     child: Padding(
@@ -68,11 +73,14 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             AnimatedContainer(
                               duration: Duration(milliseconds: 300),
-                              height: context.general.isKeyBoardOpen ? MediaQuery.of(context).size.height * 0.25 : MediaQuery.of(context).size.height * 0.3,
-                              width: context.general.isKeyBoardOpen ?MediaQuery.of(context).size.width * 0.5 : MediaQuery.of(context).size.width * 0.55,
+                              height: context.general.isKeyBoardOpen
+                                  ? MediaQuery.of(context).size.height * 0.25
+                                  : MediaQuery.of(context).size.height * 0.3,
+                              width: context.general.isKeyBoardOpen
+                                  ? MediaQuery.of(context).size.width * 0.5
+                                  : MediaQuery.of(context).size.width * 0.55,
                               child: Image.asset(
                                 AppImages.loginImage,
-                                
                               ),
                             ),
                             Padding(
@@ -85,12 +93,14 @@ class _LoginPageState extends State<LoginPage> {
                                     AnimatedDefaultTextStyle(
                                       duration: Duration(milliseconds: 300),
                                       style: GoogleFonts.poppins(
-                                            fontSize: context.general.isKeyBoardOpen ? 22 : 25,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                          fontSize:
+                                              context.general.isKeyBoardOpen
+                                                  ? 22
+                                                  : 25,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                       child: Text(
                                         "Welcome\nBack",
-                                        
                                       ),
                                     ),
                                     10.height,

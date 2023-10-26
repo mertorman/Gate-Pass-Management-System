@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../controller/auth_controller.dart';
+
 // ignore: must_be_immutable
 class SignUpWidget extends StatelessWidget {
-    SignUpWidget({
-    super.key,
-    required this.pageController
-  });
+  SignUpWidget({super.key, required this.pageController});
   PageController pageController;
+  AuthController authController = Get.find();
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
-          width: context.width() * 0.8,
-          height: context.height() * 0.07,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12), color: Colors.white),
           child: Padding(
@@ -28,6 +31,7 @@ class SignUpWidget extends StatelessWidget {
                 20.width,
                 Expanded(
                     child: TextField(
+                  controller: authController.nameController,
                   decoration: InputDecoration(
                       hintText: "Enter Full Name", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -38,8 +42,8 @@ class SignUpWidget extends StatelessWidget {
         ),
         25.height,
         Container(
-          width: context.width() * 0.8,
-          height: context.height() * 0.07,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12), color: Colors.white),
           child: Padding(
@@ -52,6 +56,7 @@ class SignUpWidget extends StatelessWidget {
                 20.width,
                 Expanded(
                     child: TextField(
+                  controller: authController.emailController,
                   decoration: InputDecoration(
                       hintText: "Enter email", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -62,8 +67,8 @@ class SignUpWidget extends StatelessWidget {
         ),
         25.height,
         Container(
-          width: context.width() * 0.8,
-          height: context.height() * 0.07,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12), color: Colors.white),
           child: Padding(
@@ -76,6 +81,8 @@ class SignUpWidget extends StatelessWidget {
                 20.width,
                 Expanded(
                     child: TextField(
+                  obscureText: true,
+                  controller: authController.passwordController,
                   decoration: InputDecoration(
                       hintText: "Enter password", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -86,8 +93,8 @@ class SignUpWidget extends StatelessWidget {
         ),
         24.height,
         Container(
-          width: context.width() * 0.8,
-          height: context.height() * 0.07,
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.07,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12), color: Colors.white),
           child: Padding(
@@ -111,14 +118,16 @@ class SignUpWidget extends StatelessWidget {
         24.height,
         ElevatedButton(
             style: ElevatedButton.styleFrom(
-                maximumSize:
-                    Size(context.width() * 0.8, context.height() * 0.07),
-                minimumSize:
-                    Size(context.width() * 0.5, context.height() * 0.07),
+                maximumSize: Size(MediaQuery.of(context).size.width * 0.8,
+                    MediaQuery.of(context).size.height * 0.07),
+                minimumSize: Size(MediaQuery.of(context).size.width * 0.5,
+                    MediaQuery.of(context).size.height * 0.07),
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-            onPressed: () {},
+            onPressed: () async {
+              await authController.registerWithEmail();
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +143,10 @@ class SignUpWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.arrow_back,color: Colors.white,),
+                Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
                 Text(
                   "Login Page",
                   style: GoogleFonts.poppins(color: Colors.white),
