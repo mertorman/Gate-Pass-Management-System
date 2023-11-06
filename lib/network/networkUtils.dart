@@ -1,14 +1,53 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:get/get.dart' hide Response;
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:nb_utils/nb_utils.dart';
 import '../product/constant/constants.dart';
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 
 class NetworkUtils {
-  final box = GetStorage();
-  Map<String, String> buildHeaderTokens() {
+  static var box = GetStorage();
+
+  final dio = Dio(BaseOptions(
+      baseUrl: APIEndPoints.baseUrl,
+      connectTimeout: const Duration(milliseconds: 6000),
+      receiveTimeout: const Duration(milliseconds: 6000),
+      headers: buildHeaderTokens()));
+
+  NetworkUtils() {
+    dio.interceptors.add(InterceptorsWrapper(
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          final newAccessToken = await refreshToken();
+          if (newAccessToken != null) {
+            dio.options.headers["authorization"] = 'Bearer $newAccessToken';
+            return handler.resolve(await dio.fetch(error.requestOptions));
+          }
+        }
+        return handler.next(error);
+      },
+    ));
+  }
+
+  Future<String?> refreshToken() async {
+    try {
+      final refreshToken = box.read("refreshtoken");
+      final response = await dio
+          .post('refresh-tokens', data: {'refreshToken': refreshToken});
+      final newAccessToken = response.data['tokens']['access']['token'];
+      box.write('accessToken', newAccessToken);
+      return newAccessToken;
+    } catch (e) {
+      box.erase();
+      Get.offAllNamed('/login');
+    }
+    return null;
+  }
+
+  static Map<String, dynamic> buildHeaderTokens() {
     Map<String, String> header = {};
 
     header.putIfAbsent(
@@ -36,22 +75,21 @@ class NetworkUtils {
       {HttpMethod method = HttpMethod.GET, Map? request}) async {
     if (await isNetworkAvailable()) {
       var headers = buildHeaderTokens();
-      Uri url = buildBaseUrl(endPoint);
+      //Uri url = buildBaseUrl(endPoint);
 
       Response response;
 
       if (method == HttpMethod.POST) {
-        response = await http.post(url,
-            body: jsonEncode(request), headers: headers, encoding: null);
+        response = await dio.post(endPoint, data: jsonEncode(request));
       } else if (method == HttpMethod.DELETE) {
-        response = await delete(url, headers: headers);
+        response = await dio.delete(endPoint, data: jsonEncode(request));
       } else if (method == HttpMethod.PUT) {
-        response = await put(url, body: jsonEncode(request), headers: headers);
+        response = await dio.put(endPoint, data: jsonEncode(request));
       } else {
-        response = await get(url, headers: headers);
+        response = await dio.get(endPoint);
       }
 
-      print('Response ($method): ${response.statusCode} ${response.body}');
+      print('Response ($method): ${response.statusCode} ${response.data}');
 
       return response;
     } else {
@@ -63,19 +101,15 @@ class NetworkUtils {
     if (!await isNetworkAvailable()) {
       throw errorInternetNotAvailable;
     }
-    if (response.statusCode == 401) {
-      if (!avoidTokenError.validate()) box.remove("token");
-      throw 'Token Expired';
-    }
-
     if (response.statusCode.isSuccessful()) {
-      var json = jsonDecode(response.body);
-      var token = json['data']['Token'];
-      await box.write('token', token);
+      var json = response.data;
+
+      // var token = json['data']['Token'];
+      // await box.write('token', token);
       return json;
     } else {
       try {
-        var body = jsonDecode(response.body);
+        var body = response.data;
         throw body['message'];
       } on Exception catch (e) {
         print(e);

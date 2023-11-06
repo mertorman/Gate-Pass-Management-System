@@ -53,7 +53,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                           color: Color(0xff1E1C61),
                           fontSize: 17,
                         )),
-                    Text("${authController.userModel.value.data!.name}",
+                    Text("${authController.userModel.value.user!.username}",
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
@@ -87,15 +87,19 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.location_pin,
-                        color: Color(0xff1E1C61),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 3),
+                        child: Icon(
+                          Icons.location_pin,
+                          color: Color(0xff1E1C61),
+                        ),
                       ),
+                    
                       Text(
-                        "Bucak Teknoloji Fakültesi Otopark",
+                        "Bucak Technology Faculty",
                         style: GoogleFonts.poppins(color: Color(0xff1E1C61)),
                       ),
                     ],

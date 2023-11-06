@@ -6,9 +6,13 @@ class Reguest_ListItem_Widget extends StatefulWidget {
   Reguest_ListItem_Widget({
     super.key,
     required this.accepted,
+    required this.email,
+    required this.name
   });
 
   bool? accepted;
+  String? email;
+  String? name;
 
   @override
   State<Reguest_ListItem_Widget> createState() =>
@@ -45,7 +49,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Elvan Duman",
+                    Text("${widget.name}",
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
@@ -54,7 +58,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                           fontSize: 14,
                         )),
                     6.height,
-                    Text("Elvanduman@mehmetakif.edu.tr",
+                    Text("${widget.email}",
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
@@ -105,7 +109,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                           });
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 5.0),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),

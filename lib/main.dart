@@ -5,11 +5,14 @@ import 'package:get_storage/get_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await initialize();
+  final box = GetStorage();
+  print(box.read('accessToken'));
+  //box.remove('accessToken');
+  //box.remove('refreshToken');
   runApp(const MyApp());
 }
 
@@ -34,7 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: MainWrapper(),
-      initialRoute: "/login",
+      initialRoute: "/splashpage",
       getPages: AppRoutes.routes,
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppImages {
-  static const loginImage = 'assets/login.png';
+  static const loginImage = 'assets/parking.png';
 }
 
 class AppColors {
@@ -9,11 +9,18 @@ class AppColors {
 }
 
 class APIEndPoints{
-   static final String baseUrl = 'http://restapi.adequateshop.com/api/';
+   static final String baseUrl = 'https://park-easy-api.onrender.com/';
    static _AuthEndPoints authEndpoints = _AuthEndPoints();
 }
 
 class _AuthEndPoints {
-  final String registerEmail = 'authaccount/registration';
-  final String loginEmail = 'authaccount/login';
+  final String registerEmail = 'auth/register/';
+  final String loginEmail = 'auth/login/';
+}
+
+
+class GetStorageKeys{
+  static const IS_LOGGED_IN = 'IS_LOGGED_IN';
+  static const IS_ADMIN = 'IS_ADMIN';
+  static const IS_USER = 'IS_USER';
 }

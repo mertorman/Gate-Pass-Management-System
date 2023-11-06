@@ -7,7 +7,7 @@ import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:rive/rive.dart' as rv;
+//import 'package:rive/rive.dart' as rv;
 import 'package:kartal/kartal.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final PageController pageController = PageController(initialPage: 0);
-  AuthController authController = Get.put(AuthController());
+  AuthController authController = Get.put(AuthController(),permanent: true);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              rv.RiveAnimation.asset("assets/riveassets/shapes.riv"),
+              //rv.RiveAnimation.asset("assets/riveassets/shapes.riv"),
               Positioned.fill(
                   child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 20, sigmaY: 10),
@@ -68,17 +68,15 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         30.height,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             AnimatedContainer(
                               duration: Duration(milliseconds: 300),
                               height: context.general.isKeyBoardOpen
-                                  ? MediaQuery.of(context).size.height * 0.25
-                                  : MediaQuery.of(context).size.height * 0.3,
-                              width: context.general.isKeyBoardOpen
-                                  ? MediaQuery.of(context).size.width * 0.5
-                                  : MediaQuery.of(context).size.width * 0.55,
+                                  ? MediaQuery.of(context).size.height * 0.15
+                                  : MediaQuery.of(context).size.height * 0.15,
+                            
                               child: Image.asset(
                                 AppImages.loginImage,
                               ),
@@ -100,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
                                       child: Text(
-                                        "Welcome\nBack",
+                                        "Welcome\nParkEasy",
                                       ),
                                     ),
                                     10.height,
@@ -121,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         30.height,
                         SizedBox(
-                          height: 490,
+                          height: 470,
                           child: Column(
                             children: [
                               Expanded(

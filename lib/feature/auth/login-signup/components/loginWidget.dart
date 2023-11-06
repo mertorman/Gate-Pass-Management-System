@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/admin/view/admin_dashboard_view.dart';
 import 'package:gate_pass_management/feature/user/view/user_view.dart';
+import 'package:get/get.dart' hide ContextExtensionss;
 //import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
+
+import '../controller/auth_controller.dart';
 
 // ignore: must_be_immutable
 class LoginWidget extends StatefulWidget {
@@ -15,10 +18,7 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  TextEditingController email = TextEditingController();
-
-  TextEditingController password = TextEditingController();
-
+  AuthController authController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,7 +38,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 20.width,
                 Expanded(
                     child: TextField(
-                  controller: email,
+                  controller: authController.emailController,
                   decoration: InputDecoration(
                       hintText: "Enter email", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -63,8 +63,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                 20.width,
                 Expanded(
                     child: TextField(
-                      obscureText: true,
-                      controller: password,
+                  obscureText: true,
+                  controller: authController.passwordController,
                   decoration: InputDecoration(
                       hintText: "Enter password", border: InputBorder.none),
                   style: GoogleFonts.poppins(fontSize: 16),
@@ -83,21 +83,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-            onPressed: () {
-              if(email.text=="admin@gmail.com" && password.text == "123456"){
-                Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return AdminDashboard();
-                },
-              ));
-              }else{
-                Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return UserPage();
-                },
-              ));
-              }
-              
+            onPressed: () async {
+              await authController.loginWithEmail();
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
