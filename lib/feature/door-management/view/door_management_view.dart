@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/feature/components/appbar_component.dart';
 import 'package:gate_pass_management/feature/components/bottom_navigation_bar.dart';
+import 'package:gate_pass_management/feature/main-wrapper/controller/main_wrapper_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +21,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
   late String formattedDate;
   late String formattedHour;
   AuthController authController = Get.find();
+
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                           color: Color(0xff1E1C61),
                           fontSize: 17,
                         )),
-                    Text("${authController.userModel.value.user!.username}",
+                    Text("${authController.userModel.value.user?.username}",
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
@@ -97,7 +99,6 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                           color: Color(0xff1E1C61),
                         ),
                       ),
-                    
                       Text(
                         "Bucak Technology Faculty",
                         style: GoogleFonts.poppins(color: Color(0xff1E1C61)),

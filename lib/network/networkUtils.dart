@@ -34,10 +34,11 @@ class NetworkUtils {
 
   Future<String?> refreshToken() async {
     try {
-      final refreshToken = box.read("refreshtoken");
+      final refreshToken = box.read("refreshToken");
       final response = await dio
-          .post('refresh-tokens', data: {'refreshToken': refreshToken});
-      final newAccessToken = response.data['tokens']['access']['token'];
+          .post('auth/refresh-tokens/', data: {'refreshToken': refreshToken});
+      print(response.data['access']['token']);
+      final newAccessToken = response.data['access']['token'];
       box.write('accessToken', newAccessToken);
       return newAccessToken;
     } catch (e) {
@@ -52,8 +53,8 @@ class NetworkUtils {
 
     header.putIfAbsent(
         HttpHeaders.contentTypeHeader, () => 'application/json; charset=utf-8');
-    header.putIfAbsent(
-        HttpHeaders.authorizationHeader, () => 'Bearer ${box.read('token')}');
+    header.putIfAbsent(HttpHeaders.authorizationHeader,
+        () => 'Bearer ${box.read('accessToken')}');
     header.putIfAbsent(
         HttpHeaders.acceptHeader, () => 'application/json; charset=utf-8');
 
@@ -61,20 +62,10 @@ class NetworkUtils {
     return header;
   }
 
-  Uri buildBaseUrl(String endPoint) {
-    Uri url = Uri.parse(endPoint);
-    if (!endPoint.startsWith('http'))
-      url = Uri.parse('${APIEndPoints.baseUrl}$endPoint');
-
-    print('URL: ${url.toString()}');
-
-    return url;
-  }
-
   Future<Response> buildHttpResponse(String endPoint,
       {HttpMethod method = HttpMethod.GET, Map? request}) async {
     if (await isNetworkAvailable()) {
-      var headers = buildHeaderTokens();
+      //var headers = buildHeaderTokens();
       //Uri url = buildBaseUrl(endPoint);
 
       Response response;
@@ -97,7 +88,7 @@ class NetworkUtils {
     }
   }
 
-  Future handleResponse(Response response, [bool? avoidTokenError]) async {
+  Future handleResponse(Response response) async {
     if (!await isNetworkAvailable()) {
       throw errorInternetNotAvailable;
     }

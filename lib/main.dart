@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
+import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:gate_pass_management/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import 'feature/main-wrapper/controller/main_wrapper_controller.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await initialize();
   final box = GetStorage();
+  //box.erase();
   print(box.read('accessToken'));
+  Get.put(AuthController(), permanent: true);
   //box.remove('accessToken');
   //box.remove('refreshToken');
   runApp(const MyApp());

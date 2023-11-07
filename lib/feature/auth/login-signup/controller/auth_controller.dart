@@ -13,8 +13,10 @@ class AuthController extends GetxController {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  RxBool newLogin = RxBool(false);
   Rx<UserModel> userModel = UserModel().obs;
   set user(UserModel value) => userModel.value = value;
+  
 
   Future<void> registerWithEmail() async {
     try {
@@ -29,6 +31,7 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.registerEmail,
               request: body,
               method: HttpMethod.POST)));
+      newLogin.value = true;
       var accessToken = userModel.value.tokens!.access!.token;
       var refreshToken = userModel.value.tokens!.refresh!.token;
       await box.write('accessToken', accessToken);
@@ -53,6 +56,7 @@ class AuthController extends GetxController {
               method: HttpMethod.POST)));
       var accessToken = userModel.value.tokens!.access!.token;
       var refreshToken = userModel.value.tokens!.refresh!.token;
+      newLogin.value = true;
       await box.write('accessToken', accessToken);
       await box.write('refreshToken', refreshToken);
       await box.write(GetStorageKeys.IS_LOGGED_IN, true);

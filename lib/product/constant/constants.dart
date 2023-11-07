@@ -16,6 +16,7 @@ class APIEndPoints{
 class _AuthEndPoints {
   final String registerEmail = 'auth/register/';
   final String loginEmail = 'auth/login/';
+  final String currentUser = 'user/';
 }
 
 

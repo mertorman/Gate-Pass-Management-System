@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final PageController pageController = PageController(initialPage: 0);
-  AuthController authController = Get.put(AuthController(),permanent: true);
+ // AuthController authController = Get.put(AuthController(),permanent: true);
   @override
   Widget build(BuildContext context) {
     return Container(
