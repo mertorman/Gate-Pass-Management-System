@@ -3,16 +3,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class Reguest_ListItem_Widget extends StatefulWidget {
-  Reguest_ListItem_Widget({
-    super.key,
-    required this.accepted,
-    required this.email,
-    required this.name
-  });
+  Reguest_ListItem_Widget(
+      {super.key,
+      required this.accepted,
+      required this.email,
+      required this.name,
+      required this.phone,
+      required this.acceptPressed});
 
   bool? accepted;
   String? email;
   String? name;
+  String? phone;
+  VoidCallback acceptPressed;
 
   @override
   State<Reguest_ListItem_Widget> createState() =>
@@ -20,6 +23,7 @@ class Reguest_ListItem_Widget extends StatefulWidget {
 }
 
 class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -66,7 +70,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                             fontSize: 12,
                             color: Color(0xff1E1C61).withOpacity(0.7))),
                     8.height,
-                    Text("(555)555-55-55",
+                    Text("${widget.phone}",
                         textAlign: TextAlign.center,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -82,11 +86,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.accepted = true;
-                          });
-                        },
+                        onPressed: widget.acceptPressed,
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 5.0),
@@ -103,11 +103,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600))),
                     ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.accepted = false;
-                          });
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 5.0),
@@ -131,7 +127,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
           ),
         ),
         AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeIn,
           width: MediaQuery.of(context).size.width * 0.28,
           height: MediaQuery.of(context).size.height * 0.0255,
@@ -140,22 +136,23 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
             color: widget.accepted == null
-                ? Colors.orange.withOpacity(0.7)
+                ? Colors.red.withOpacity(0.7)
                 : widget.accepted == true
                     ? Colors.green.withOpacity(0.7)
-                    : Colors.red.withOpacity(0.7),
+                    : Colors.orange.withOpacity(0.7),
+                     
             borderRadius: BorderRadius.circular(36),
           ),
           child: Text(
             widget.accepted == null
-                ? "Waiting"
+                ? "Rejected"
                 : widget.accepted == true
                     ? "Approved"
-                    : "Rejected",
+                    : "Waiting",
             style: GoogleFonts.poppins(
                 color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
           ),
-        )
+        ),
       ],
     );
   }

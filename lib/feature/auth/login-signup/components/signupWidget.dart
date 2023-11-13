@@ -152,7 +152,7 @@ class SignUpWidget extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12))),
               onPressed: () async {
-                await authController.registerWithEmail();
+                await authController.registerWithEmail(context);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

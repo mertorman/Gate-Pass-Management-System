@@ -4,6 +4,9 @@ import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:get/get.dart';
 import 'package:gate_pass_management/network/NetworkUtils.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:quickalert/quickalert.dart';
+import '../../../components/snackbar_content.dart';
 
 class AuthController extends GetxController {
   final box = GetStorage();
@@ -16,9 +19,8 @@ class AuthController extends GetxController {
   RxBool newLogin = RxBool(false);
   Rx<UserModel> userModel = UserModel().obs;
   set user(UserModel value) => userModel.value = value;
-  
 
-  Future<void> registerWithEmail() async {
+  Future<void> registerWithEmail(BuildContext context) async {
     try {
       Map body = {
         "email": emailController.text,
@@ -31,19 +33,34 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.registerEmail,
               request: body,
               method: HttpMethod.POST)));
-      newLogin.value = true;
-      var accessToken = userModel.value.tokens!.access!.token;
-      var refreshToken = userModel.value.tokens!.refresh!.token;
-      await box.write('accessToken', accessToken);
-      await box.write('refreshToken', refreshToken);
-      await box.write(GetStorageKeys.IS_LOGGED_IN, true);
-      Get.offAllNamed("/mainwrapper");
+      if (userModel.value.user?.isApproved == true) {
+        newLogin.value = true;
+        var accessToken = userModel.value.tokens!.access!.token;
+        var refreshToken = userModel.value.tokens!.refresh!.token;
+        await box.write('accessToken', accessToken);
+        await box.write('refreshToken', refreshToken);
+        await box.write(GetStorageKeys.IS_LOGGED_IN, true);
+        Get.offAllNamed("/mainwrapper");
+      } else {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Successful!',
+          text:
+              'The registration process is successful, you will be able to log in to the application after your account is approved by our administrators.',
+        );
+        nameController.clear();
+        emailController.clear();
+        phoneController.clear();
+        passwordController.clear();
+        
+      }
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> loginWithEmail() async {
+  Future<void> loginWithEmail(BuildContext context) async {
     try {
       Map body = {
         "email": emailController.text,
@@ -54,13 +71,24 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.loginEmail,
               request: body,
               method: HttpMethod.POST)));
-      var accessToken = userModel.value.tokens!.access!.token;
-      var refreshToken = userModel.value.tokens!.refresh!.token;
-      newLogin.value = true;
-      await box.write('accessToken', accessToken);
-      await box.write('refreshToken', refreshToken);
-      await box.write(GetStorageKeys.IS_LOGGED_IN, true);
-      Get.offAllNamed("/mainwrapper");
+      if (userModel.value.user?.isApproved == true) {
+        var accessToken = userModel.value.tokens!.access!.token;
+        var refreshToken = userModel.value.tokens!.refresh!.token;
+        newLogin.value = true;
+        await box.write('accessToken', accessToken);
+        await box.write('refreshToken', refreshToken);
+        await box.write(GetStorageKeys.IS_LOGGED_IN, true);
+        Get.offAllNamed("/mainwrapper");
+      } else {
+        final snackBar = SnackbarContent(
+            "Hesap Onayı",
+            "Hesabınız onay aşamasındadır. Onaylandıktan sonra giriş yapabileceksiniz.",
+            ContentType.warning);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
     } catch (e) {
       print(e);
     }

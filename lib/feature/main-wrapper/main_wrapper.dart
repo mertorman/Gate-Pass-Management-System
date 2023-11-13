@@ -15,6 +15,8 @@ class MainWrapper extends StatelessWidget {
   MainWrapperController mainWrapperController =
       Get.put(MainWrapperController());
 
+  AuthController authController = Get.find();
+
   final box = GetStorage();
 
   @override
@@ -31,7 +33,11 @@ class MainWrapper extends StatelessWidget {
         body: PageView(
           controller: mainWrapperController.pageController,
           physics: const NeverScrollableScrollPhysics(),
-          children: [...mainWrapperController.pages],
+          children: [
+            if (authController.userModel.value.user?.role == 'admin')
+                 ...mainWrapperController.pagesAdmin
+                else  ...mainWrapperController.pagesUser
+          ],
         ),
       );
     });

@@ -11,7 +11,7 @@ import '../../../product/constant/constants.dart';
 import '../../auth/login-signup/models/user_Model.dart';
 
 class MainWrapperController extends GetxController with StateMixin {
-  late PageController pageController;
+  late PageController pageController=PageController(initialPage: 0);
   NetworkUtils networkUtils = NetworkUtils();
   AuthController authController = Get.find();
   final box = GetStorage();
@@ -21,19 +21,24 @@ class MainWrapperController extends GetxController with StateMixin {
   void onInit() async {
     super.onInit();
     change(null, status: RxStatus.success());
-    if (box.read(GetStorageKeys.IS_LOGGED_IN) == true && authController.newLogin.value == false) {
+    if (await box.read(GetStorageKeys.IS_LOGGED_IN) == true && authController.newLogin.value == false) {
       change(null, status: RxStatus.loading());
       await getCurrentUser().then((value) {
         change(null, status: RxStatus.success());
         
       });
     }
-    pageController = PageController(initialPage: 0);
+ 
   }
 
-  List<Widget> pages = [
+  List<Widget> pagesAdmin = [
     const DoorManagementPage(),
     const AdminDashboard(),
+    const UserPage()
+  ];
+
+    List<Widget> pagesUser = [
+    const DoorManagementPage(),
     const UserPage()
   ];
 

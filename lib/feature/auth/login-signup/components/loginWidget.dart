@@ -23,6 +23,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Spacer(flex: 1,),
         Container(
           width: context.width() * 0.8,
           height: context.height() * 0.07,
@@ -84,7 +85,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
             onPressed: () async {
-              await authController.loginWithEmail();
+              await authController.loginWithEmail(context);
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -130,6 +131,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [Text("Sign Up"), 8.width, Icon(Icons.arrow_forward)],
             )),
+             Spacer(flex: 2,),
       ],
     );
   }
