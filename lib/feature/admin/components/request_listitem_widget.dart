@@ -9,13 +9,17 @@ class Reguest_ListItem_Widget extends StatefulWidget {
       required this.email,
       required this.name,
       required this.phone,
-      required this.acceptPressed});
+      this.acceptPressed,
+      required this.getAllUsersWidgetUsed
+      
+      });
 
   bool? accepted;
   String? email;
   String? name;
   String? phone;
-  VoidCallback acceptPressed;
+  VoidCallback? acceptPressed;
+  bool getAllUsersWidgetUsed;
 
   @override
   State<Reguest_ListItem_Widget> createState() =>
@@ -23,15 +27,14 @@ class Reguest_ListItem_Widget extends StatefulWidget {
 }
 
 class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
           width: context.width() * 0.88,
-          height: context.height() * 0.12,
-          margin: const EdgeInsets.only(top: 10),
+          height:  widget.getAllUsersWidgetUsed ? context.height() * 0.1 : context.height() * 0.12,
+          margin: widget.getAllUsersWidgetUsed ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Color(0xff4B7FFB).withOpacity(0.1),
@@ -80,7 +83,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                   ],
                 ),
               ),
-              Expanded(
+            widget.getAllUsersWidgetUsed ? SizedBox() : Expanded(
                 flex: 1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -130,7 +133,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeIn,
           width: MediaQuery.of(context).size.width * 0.28,
-          height: MediaQuery.of(context).size.height * 0.0255,
+          height: widget.getAllUsersWidgetUsed ?  MediaQuery.of(context).size.height * 0.025 :  MediaQuery.of(context).size.height * 0.0255,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 16),
           padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -140,7 +143,6 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                 : widget.accepted == true
                     ? Colors.green.withOpacity(0.7)
                     : Colors.orange.withOpacity(0.7),
-                     
             borderRadius: BorderRadius.circular(36),
           ),
           child: Text(

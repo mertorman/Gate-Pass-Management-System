@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
-import 'package:gate_pass_management/feature/components/appbar_component.dart';
-import 'package:gate_pass_management/feature/components/bottom_navigation_bar.dart';
-import 'package:gate_pass_management/feature/main-wrapper/controller/main_wrapper_controller.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:timer_builder/timer_builder.dart';
 
 class DoorManagementPage extends StatefulWidget {
   const DoorManagementPage({super.key});
@@ -17,16 +15,20 @@ class DoorManagementPage extends StatefulWidget {
 }
 
 class _DoorManagementPageState extends State<DoorManagementPage> {
-  DateTime now = DateTime.now();
+  DateTime now2 = DateTime.now();
   late String formattedDate;
   late String formattedHour;
   AuthController authController = Get.find();
 
+  String getSystemTime() {
+    DateTime now = DateTime.now();
+    formattedHour = DateFormat.Hms().format(now);
+    return formattedHour;
+  }
 
   @override
   void initState() {
-    formattedDate = DateFormat.yMMMMd().format(now);
-    formattedHour = DateFormat.Hm().format(now.add(Duration(hours: 3)));
+    formattedDate = DateFormat.yMMMMd().format(now2);
     //print(formattedDate);
     super.initState();
   }
@@ -111,12 +113,17 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
             Spacer(
               flex: 1,
             ),
-            Text(
-              "$formattedHour",
-              style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  color: Color(0xff1E1C61),
-                  fontWeight: FontWeight.w500),
+            TimerBuilder.periodic(
+              Duration(seconds: 1),
+              builder: (context) {
+                return Text(
+                  "${getSystemTime()}",
+                  style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      color: Color(0xff1E1C61),
+                      fontWeight: FontWeight.w500),
+                );
+              },
             ),
             Text(
               "$formattedDate",

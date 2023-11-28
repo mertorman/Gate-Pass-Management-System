@@ -30,14 +30,16 @@ class MainWrapper extends StatelessWidget {
         bottomNavigationBar: NavigationBarBottom(),
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xffF9F9F9),
-        body: PageView(
-          controller: mainWrapperController.pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            if (authController.userModel.value.user?.role == 'admin')
-                 ...mainWrapperController.pagesAdmin
-                else  ...mainWrapperController.pagesUser
-          ],
+        body: SafeArea(
+          child: PageView(
+            controller: mainWrapperController.pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              if (authController.userModel.value.user?.role == 'admin')
+                   ...mainWrapperController.pagesAdmin
+                  else  ...mainWrapperController.pagesUser
+            ],
+          ),
         ),
       );
     });

@@ -10,8 +10,10 @@ import '../../../product/constant/constants.dart';
 
 class AdminController extends GetxController with StateMixin {
   RxList<UserModel2> unapprovedAccounts = RxList<UserModel2>([]);
+  RxList<UserModel2> allapprovedAccounts = RxList<UserModel2>([]);
   NetworkUtils networkUtils = NetworkUtils();
   final accepted = Rxn<bool>();
+  RxBool isLoadingData = false.obs;
 
   @override
   void onInit() async {
@@ -40,7 +42,6 @@ class AdminController extends GetxController with StateMixin {
 
   Future<void> confirmAccount(String id) async {
     try {
-    
       await networkUtils
           .handleResponse(await networkUtils.buildHttpResponse(
               APIEndPoints.authEndpoints.confirmAccount + id,
@@ -58,5 +59,21 @@ class AdminController extends GetxController with StateMixin {
     }
   }
 
-  
+  Future<void> getAllAprovedAccounts() async {
+    try {
+      isLoadingData.value = true;
+      var response = await networkUtils.handleResponse(await networkUtils
+          .buildHttpResponse(APIEndPoints.authEndpoints.getAllApprovedAccounts,
+              method: HttpMethod.GET));
+      if (response is List<dynamic>) {
+        allapprovedAccounts.value = response
+            .map((e) => UserModel2.fromJson(e))
+            .where((user) => user.isApproved == true)
+            .toList();
+        isLoadingData.value = false;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

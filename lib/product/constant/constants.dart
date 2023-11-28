@@ -19,6 +19,7 @@ class _AuthEndPoints {
   final String currentUser = 'user/';
   final String getUsers = 'users/';
   final String confirmAccount = 'user/approve/';
+  final String getAllApprovedAccounts = 'users/';
 }
 
 class GetStorageKeys {
