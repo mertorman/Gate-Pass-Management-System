@@ -33,7 +33,7 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.registerEmail,
               request: body,
               method: HttpMethod.POST)));
-      if (userModel.value.user?.isApproved == true) {
+      if (userModel.value.user?.isApproved == true && userModel.value.user != null) {
         newLogin.value = true;
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
@@ -71,7 +71,7 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.loginEmail,
               request: body,
               method: HttpMethod.POST)));
-      if (userModel.value.user?.isApproved == true) {
+      if (userModel.value.user?.isApproved == true && userModel.value.user != null) {
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
         newLogin.value = true;

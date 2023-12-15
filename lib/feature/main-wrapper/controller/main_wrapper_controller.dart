@@ -20,7 +20,7 @@ class MainWrapperController extends GetxController with StateMixin {
   @override
   void onInit() async {
     super.onInit();
-    change(null, status: RxStatus.success());
+    change(null, status: RxStatus.loading());
     if (await box.read(GetStorageKeys.IS_LOGGED_IN) == true && authController.newLogin.value == false) {
       change(null, status: RxStatus.loading());
       await getCurrentUser().then((value) {

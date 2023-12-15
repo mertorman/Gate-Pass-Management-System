@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
-import 'package:get/get.dart';
+import 'package:gate_pass_management/feature/door-management/controller/door_management_controller.dart';
+import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -15,6 +16,8 @@ class DoorManagementPage extends StatefulWidget {
 }
 
 class _DoorManagementPageState extends State<DoorManagementPage> {
+  DoorManagementController doorManagementController =
+      Get.put(DoorManagementController());
   DateTime now2 = DateTime.now();
   late String formattedDate;
   late String formattedHour;
@@ -55,7 +58,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
                           color: Color(0xff1E1C61),
-                          fontSize: 17,
+                          fontSize: 18,
                         )),
                     Text("${authController.userModel.value.user?.username}",
                         textAlign: TextAlign.center,
@@ -63,13 +66,13 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
                           color: Color(0xff1E1C61),
-                          fontSize: 20,
+                          fontSize: 21,
                         )),
                   ],
                 ),
                 const Center(
                   child: CircleAvatar(
-                    radius: 28,
+                    radius: 30,
                     foregroundImage: AssetImage("assets/pp3.jpg"),
                     backgroundColor: Colors.transparent,
                   ),
@@ -82,8 +85,8 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
             Card(
               color: Colors.white,
               child: Container(
-                width: 300,
-                height: 45,
+                width: context.width() * 0.8,
+                height: context.height() * 0.05,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
@@ -136,7 +139,10 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
             InkWell(
               splashColor: Colors.red.withOpacity(0.8),
               customBorder: const CircleBorder(),
-              onTap: () {},
+              onTap: () async{
+                await doorManagementController.getCurrentLocation(context);
+                print(doorManagementController.isInsideCircle);
+              },
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.4,
                 height: MediaQuery.of(context).size.width * 0.4,

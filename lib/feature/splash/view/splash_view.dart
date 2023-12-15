@@ -4,6 +4,8 @@ import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:get_storage/get_storage.dart';
 import 'package:nb_utils/nb_utils.dart';
 
+import '../../auth/login-signup/controller/auth_controller.dart';
+
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
@@ -13,6 +15,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final box = GetStorage();
+  AuthController authController = Get.find();
 
   @override
   void initState() {

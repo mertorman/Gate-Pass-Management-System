@@ -26,7 +26,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
           style: GoogleFonts.robotoSlab(
               textStyle: const TextStyle(
                   color: AppColors.primaryColor,
-                  fontSize: 25,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold)),
         ),
       ),
