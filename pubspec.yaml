@@ -49,6 +49,7 @@ dependencies:
   quickalert: ^1.0.2
   timer_builder: ^2.0.0
   geolocator: ^10.1.0
+  flutter_profile_picture: ^2.0.0
 
 
 dev_dependencies:

@@ -10,6 +10,7 @@ class AppColors {
 
 class APIEndPoints {
   static final String baseUrl = 'https://park-easy-api.onrender.com/';
+  static final String baseUrl2 = 'https://api.mocki.io/v2/960f6555/';
   static _AuthEndPoints authEndpoints = _AuthEndPoints();
 }
 
@@ -20,6 +21,7 @@ class _AuthEndPoints {
   final String getUsers = 'users/';
   final String confirmAccount = 'user/approve/';
   final String getAllApprovedAccounts = 'users/';
+  final String gatePassUser = 'user/gatepass';
 }
 
 class GetStorageKeys {

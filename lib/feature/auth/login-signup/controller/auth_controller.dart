@@ -33,7 +33,8 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.registerEmail,
               request: body,
               method: HttpMethod.POST)));
-      if (userModel.value.user?.isApproved == true && userModel.value.user != null) {
+      if (userModel.value.user?.isApproved == true &&
+          userModel.value.user != null) {
         newLogin.value = true;
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
@@ -53,7 +54,6 @@ class AuthController extends GetxController {
         emailController.clear();
         phoneController.clear();
         passwordController.clear();
-        
       }
     } catch (e) {
       print(e);
@@ -71,7 +71,8 @@ class AuthController extends GetxController {
               APIEndPoints.authEndpoints.loginEmail,
               request: body,
               method: HttpMethod.POST)));
-      if (userModel.value.user?.isApproved == true && userModel.value.user != null) {
+      if (userModel.value.user?.isApproved == true &&
+          userModel.value.user != null) {
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
         newLogin.value = true;
@@ -89,6 +90,16 @@ class AuthController extends GetxController {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      await box.erase();
+      newLogin.value = false;
+      Get.offAllNamed("/login");
     } catch (e) {
       print(e);
     }

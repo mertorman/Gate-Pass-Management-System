@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/feature/door-management/controller/door_management_controller.dart';
@@ -27,13 +28,6 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
     DateTime now = DateTime.now();
     formattedHour = DateFormat.Hms().format(now);
     return formattedHour;
-  }
-
-  @override
-  void initState() {
-    formattedDate = DateFormat.yMMMMd().format(now2);
-    //print(formattedDate);
-    super.initState();
   }
 
   @override
@@ -70,13 +64,14 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                         )),
                   ],
                 ),
-                const Center(
-                  child: CircleAvatar(
-                    radius: 30,
-                    foregroundImage: AssetImage("assets/pp3.jpg"),
-                    backgroundColor: Colors.transparent,
-                  ),
-                ),
+                 Center(
+                    child: ProfilePicture(
+                  name: '${authController.userModel.value.user?.username}',
+                  role: '${authController.userModel.value.user?.role}'.toUpperCase(),
+                  radius: 31,
+                  fontsize: 21,
+                  tooltip: true,
+                )),
               ],
             ),
             Spacer(
@@ -120,7 +115,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
               Duration(seconds: 1),
               builder: (context) {
                 return Text(
-                  "${getSystemTime()}",
+                  "${doorManagementController.getSystemTime()}",
                   style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: Color(0xff1E1C61),
@@ -129,7 +124,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
               },
             ),
             Text(
-              "$formattedDate",
+              "${doorManagementController.formattedDate}",
               style: GoogleFonts.poppins(
                   fontSize: 16, color: Color(0xff1E1C61).withOpacity(0.8)),
             ),
@@ -139,7 +134,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
             InkWell(
               splashColor: Colors.red.withOpacity(0.8),
               customBorder: const CircleBorder(),
-              onTap: () async{
+              onTap: () async {
                 await doorManagementController.getCurrentLocation(context);
                 print(doorManagementController.isInsideCircle);
               },
@@ -208,9 +203,11 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       5.height,
-                      Text(
-                        "N/A",
-                        style: GoogleFonts.poppins(fontSize: 15),
+                      Obx(
+                        () => Text(
+                          "${doorManagementController.entryTime}",
+                          style: GoogleFonts.poppins(fontSize: 15),
+                        ),
                       )
                     ],
                   ),
@@ -227,7 +224,8 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       5.height,
-                      Text("N/A", style: GoogleFonts.poppins(fontSize: 15))
+                      Obx(() => Text("${doorManagementController.exitTime}",
+                          style: GoogleFonts.poppins(fontSize: 15)))
                     ],
                   )
                 ],
