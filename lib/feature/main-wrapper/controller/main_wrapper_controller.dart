@@ -29,7 +29,7 @@ class MainWrapperController extends GetxController with StateMixin {
           change(null, status: RxStatus.success());
         }
       });
-    }else if(authController.newLogin == true){
+    } else if (authController.newLogin == true) {
       change(null, status: RxStatus.success());
     }
   }
@@ -40,7 +40,11 @@ class MainWrapperController extends GetxController with StateMixin {
     const ProfilePage()
   ];
 
-  List<Widget> pagesUser = [const DoorManagementPage(), const UserPage(),const ProfilePage()];
+  List<Widget> pagesUser = [
+    const DoorManagementPage(),
+    const UserPage(),
+    const ProfilePage()
+  ];
 
   Future<void> getCurrentUser() async {
     try {
@@ -48,6 +52,7 @@ class MainWrapperController extends GetxController with StateMixin {
           .handleResponse(await networkUtils.buildHttpResponse(
               APIEndPoints.authEndpoints.currentUser,
               method: HttpMethod.GET)));
+
     } catch (e) {
       print(e);
     }

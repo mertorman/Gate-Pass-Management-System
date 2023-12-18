@@ -32,211 +32,218 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffF9F9F9),
-      body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            12.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Good Morning,",
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          color: Color(0xff1E1C61),
-                          fontSize: 18,
-                        )),
-                    Text("${authController.userModel.value.user?.username}",
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff1E1C61),
-                          fontSize: 21,
-                        )),
-                  ],
-                ),
-                 Center(
-                    child: ProfilePicture(
-                  name: '${authController.userModel.value.user?.username}',
-                  role: '${authController.userModel.value.user?.role}'.toUpperCase(),
-                  radius: 31,
-                  fontsize: 21,
-                  tooltip: true,
-                )),
-              ],
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            Card(
-              color: Colors.white,
-              child: Container(
-                width: context.width() * 0.8,
-                height: context.height() * 0.05,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        width: 2, color: Color(0xff1E1C61).withOpacity(0.5))),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 3),
-                        child: Icon(
-                          Icons.location_pin,
-                          color: Color(0xff1E1C61),
-                        ),
-                      ),
-                      Text(
-                        "Bucak Technology Faculty",
-                        style: GoogleFonts.poppins(color: Color(0xff1E1C61)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            TimerBuilder.periodic(
-              Duration(seconds: 1),
-              builder: (context) {
-                return Text(
-                  "${doorManagementController.getSystemTime()}",
-                  style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      color: Color(0xff1E1C61),
-                      fontWeight: FontWeight.w500),
-                );
-              },
-            ),
-            Text(
-              "${doorManagementController.formattedDate}",
-              style: GoogleFonts.poppins(
-                  fontSize: 16, color: Color(0xff1E1C61).withOpacity(0.8)),
-            ),
-            Spacer(
-              flex: 1,
-            ),
-            InkWell(
-              splashColor: Colors.red.withOpacity(0.8),
-              customBorder: const CircleBorder(),
-              onTap: () async {
-                await doorManagementController.getCurrentLocation(context);
-                print(doorManagementController.isInsideCircle);
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                height: MediaQuery.of(context).size.width * 0.4,
-                decoration: BoxDecoration(
-                  color: Color(0xff1E1C61).withOpacity(0.25), // border color
-                  shape: BoxShape.circle,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(3), // border width
-                  child: Container(
-                    // or ClipRRect if you need to clip the content
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xff1E1C61)
-                          .withOpacity(0.8), // inner circle color
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xff1E1C61).withOpacity(0.5),
-                          spreadRadius: 3,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/login_icon.svg",
-                            width: MediaQuery.of(context).size.width * 0.038,
-                            height: MediaQuery.of(context).size.height * 0.038,
-                          ),
-                          12.height,
-                          Text(
-                            "Open",
-                            style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          )
-                        ],
-                      ),
-                    ), // inner content
-                  ),
-                ),
-              ),
-            ),
-            const Spacer(
-              flex: 2,
-            ),
-            IntrinsicHeight(
-              child: Row(
+    return doorManagementController
+        .obx(onLoading: Center(child: CircularProgressIndicator()), (state) {
+      return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xffF9F9F9),
+        body: SafeArea(
+            child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              12.height,
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Entry time",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      5.height,
-                      Obx(
-                        () => Text(
-                          "${doorManagementController.entryTime}",
-                          style: GoogleFonts.poppins(fontSize: 15),
-                        ),
-                      )
+                      Text("Good Morning,",
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            color: Color(0xff1E1C61),
+                            fontSize: 18,
+                          )),
+                      Text("${authController.userModel.value.user?.username}",
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff1E1C61),
+                            fontSize: 21,
+                          )),
                     ],
                   ),
-                  VerticalDivider(
-                    thickness: 1,
-                    color: Colors.grey.withOpacity(0.8),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Exit time",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      5.height,
-                      Obx(() => Text("${doorManagementController.exitTime}",
-                          style: GoogleFonts.poppins(fontSize: 15)))
-                    ],
-                  )
+                  Center(
+                      child: ProfilePicture(
+                    name: '${authController.userModel.value.user?.username}',
+                    role: '${authController.userModel.value.user?.role}'
+                        .toUpperCase(),
+                    radius: 31,
+                    fontsize: 21,
+                    tooltip: true,
+                  )),
                 ],
               ),
-            ),
-            const Spacer(
-              flex: 1,
-            ),
-          ],
-        ),
-      )),
-    );
+              Spacer(
+                flex: 1,
+              ),
+              Card(
+                color: Colors.white,
+                child: Container(
+                  width: context.width() * 0.8,
+                  height: context.height() * 0.05,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          width: 2, color: Color(0xff1E1C61).withOpacity(0.5))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 3),
+                          child: Icon(
+                            Icons.location_pin,
+                            color: Color(0xff1E1C61),
+                          ),
+                        ),
+                        Text(
+                          "Bucak Technology Faculty",
+                          style: GoogleFonts.poppins(color: Color(0xff1E1C61)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              TimerBuilder.periodic(
+                Duration(seconds: 1),
+                builder: (context) {
+                  return Text(
+                    "${doorManagementController.getSystemTime(false)}",
+                    style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: Color(0xff1E1C61),
+                        fontWeight: FontWeight.w500),
+                  );
+                },
+              ),
+              Text(
+                "${doorManagementController.formattedDate}",
+                style: GoogleFonts.poppins(
+                    fontSize: 16, color: Color(0xff1E1C61).withOpacity(0.8)),
+              ),
+              Spacer(
+                flex: 1,
+              ),
+              Obx(
+                () => InkWell(
+                  splashColor: Colors.red.withOpacity(0.8),
+                  customBorder: const CircleBorder(),
+                  
+                  onTap: () async => doorManagementController.isButtonDisabled.value ? null : await doorManagementController.getCurrentLocation(context),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    height: MediaQuery.of(context).size.width * 0.4,
+                    decoration: BoxDecoration(
+                      color:  doorManagementController.isInside.value ? Color(0xffCC0000).withOpacity(0.25) : Color(0xff1E1C61).withOpacity(0.25), // border color
+                      shape: BoxShape.circle,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(3), // border width
+                      child: AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          decoration: BoxDecoration(
+                            shape:  BoxShape.circle,
+                            color: doorManagementController.isInside.value ?  Color(0xffCC0000).withOpacity(0.8) : Color(0xff1E1C61).withOpacity(0.8), // inner circle color
+                            boxShadow: [
+                              BoxShadow(
+                                color:doorManagementController.isInside.value ? Color(0xffCC0000).withOpacity(0.5) : Color(0xff1E1C61).withOpacity(0.5),
+                                spreadRadius: 3,
+                                blurRadius: 7,
+                                offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                    doorManagementController.isInside.value ? "assets/exit_icon.svg" :"assets/login_icon.svg",
+                                    width: MediaQuery.of(context).size.height* 0.038,
+                                    height:
+                                        MediaQuery.of(context).size.height * 0.038,
+                                  ),
+                             
+                                12.height,
+                                Text(
+                                  doorManagementController.isInside.value ? "Exit" : "Open",
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                              
+                              ],
+                            ),
+                          ), // inner content
+                        ),
+                     
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(
+                flex: 2,
+              ),
+              IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Entry time",
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        5.height,
+                        Obx(
+                          () => Text(
+                            "${doorManagementController.entryTime}",
+                            style: GoogleFonts.poppins(fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                    VerticalDivider(
+                      thickness: 1,
+                      color: Colors.grey.withOpacity(0.8),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Exit time",
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        5.height,
+                        Obx(() => Text("${doorManagementController.exitTime}",
+                            style: GoogleFonts.poppins(fontSize: 15)))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const Spacer(
+                flex: 1,
+              ),
+            ],
+          ),
+        )),
+      );
+    });
   }
 }

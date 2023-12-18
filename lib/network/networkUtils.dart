@@ -105,9 +105,6 @@ class NetworkUtils {
     }
     if (response.statusCode.isSuccessful()) {
       var json = response.data;
-
-      // var token = json['data']['Token'];
-      // await box.write('token', token);
       return json;
     } else {
       try {

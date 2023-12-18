@@ -1,13 +1,16 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
+import 'package:gate_pass_management/feature/door-management/models/gate_access_model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../network/networkUtils.dart';
+import '../../../product/constant/constants.dart';
 import '../../components/snackbar_content.dart';
 
-class DoorManagementController extends GetxController {
+class DoorManagementController extends GetxController with StateMixin {
   AuthController authController = Get.find();
   late double userLatitude;
   late double userLongitude;
@@ -17,34 +20,44 @@ class DoorManagementController extends GetxController {
   RxBool isInsideCircle = RxBool(false);
   DateTime now = DateTime.now();
   late String formattedDate;
+  late String formattedDate2;
   late String formattedHour;
   RxString entryTime = RxString("N/A");
   RxString exitTime = RxString("N/A");
 
+  RxBool isInside = RxBool(false);
+  RxBool isButtonDisabled = RxBool(false);
+
+  NetworkUtils networkUtils = NetworkUtils();
+  Rx<GateAccessModel> gateAccessModel = GateAccessModel().obs;
+  set setGateAccessModel(GateAccessModel value) =>
+      gateAccessModel.value = value;
 
   @override
-  void onInit() {
+  void onInit() async {
     formattedDate = DateFormat.yMMMMd().format(now);
+    formattedDate2 = DateFormat('dd.MM.yyyy').format(now);
+    change(null, status: RxStatus.loading());
+    await getLatestGateInfo();
+    change(null, status: RxStatus.success());
     super.onInit();
   }
 
-  //Future<void> requestLocationPermission() async {
-  //  LocationPermission permission = await Geolocator.requestPermission();
-  //  if (permission == LocationPermission.denied) {
-  //    // Kullanıcı izin vermediyse, izinleri tekrar talep edebilir veya bir işlem yapabilirsiniz.
-  //  }
-  // }
-
-  String getSystemTime() {
+  String getSystemTime(bool formatHHmm) {
     DateTime now2 = DateTime.now();
     formattedHour = DateFormat.Hms().format(now2);
-    return formattedHour;
+    if (formatHHmm) {
+      String formatHHmmHour = DateFormat('HH:mm').format(now2);
+      return formatHHmmHour;
+    } else {
+      return formattedHour;
+    }
   }
 
   Future<void> getCurrentLocation(BuildContext context) async {
     try {
       // Her butona tıklandığında konum izinlerini kontrol et ve güncel konumu al
-
+      isButtonDisabled.value = true;
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.always ||
           permission == LocationPermission.whileInUse) {
@@ -59,7 +72,9 @@ class DoorManagementController extends GetxController {
           ..showSnackBar(snackBar);
       } else if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
+        isButtonDisabled.value = false;
         if (permission == LocationPermission.denied) {
+          isButtonDisabled.value = false;
           final snackBar = SnackBar(
             content: Text('Konum izinleri reddedildi.'),
             action: SnackBarAction(
@@ -85,7 +100,7 @@ class DoorManagementController extends GetxController {
     }
   }
 
-  void _checkIfUserInsideCircle(BuildContext context) {
+  void _checkIfUserInsideCircle(BuildContext context) async {
     double distance = Geolocator.distanceBetween(
       userLatitude,
       userLongitude,
@@ -101,6 +116,8 @@ class DoorManagementController extends GetxController {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
+      await gateAccess(isInside.value);
+      isButtonDisabled.value = false;
     } else {
       final snackBar = SnackbarContent(
           "You are not in location!",
@@ -112,21 +129,78 @@ class DoorManagementController extends GetxController {
         ..showSnackBar(snackBar);
       Future.delayed(Duration(seconds: 3), () {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        isButtonDisabled.value = false;
       });
     }
   }
 
-  Future<void> entryCarPark() async {
+  Future<void> gateAccess(bool isInside) async {
     try {
-      Map body = {
-        "username": authController.userModel.value.user?.username,
-        "date": formattedDate,
-        "time": getSystemTime(),
-        //"type":
-        "message": "Logged In",
-      };
+      if (isInside) {
+        //String time = getSystemTime(true);
+        //Map bodyClose = {
+        // "exitDate": formattedDate2,
+        //  "exitTime": time,
+        // };
+        print(NetworkUtils.box.read("accessToken"));
+        setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
+            .handleResponse(await networkUtils.buildHttpResponse(
+                APIEndPoints.authEndpoints.exitGate,
+                request: {},
+                method: HttpMethod.PATCH)));
+        this.isInside.value = gateAccessModel.value.isInside!;
+        print(this.isInside.value);
+        exitTime.value = gateAccessModel.value.entries!.last.exitTime!;
+      } else {
+        // String time = getSystemTime(true);
+        // Map bodyOpen = {
+        //   "entryDate": formattedDate2,
+        //   "entryTime": time,
+        // };
+        setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
+            .handleResponse(await networkUtils.buildHttpResponse(
+                APIEndPoints.authEndpoints.openGate,
+                request: {},
+                method: HttpMethod.POST)));
+        if (gateAccessModel.value.isInside != null) {
+          this.isInside.value = gateAccessModel.value.isInside!;
+        }
+        print(this.isInside.value);
+        if (gateAccessModel.value.entries!.last.exitTime == null) {
+          exitTime.value = 'N/A';
+        }
+        entryTime.value = gateAccessModel.value.entries!.last.entryTime!;
+      }
+
+      print(gateAccessModel.value);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> getLatestGateInfo() async {
+    try {
+      setGateAccessModel = GateAccessModel.fromInfo(await networkUtils
+          .handleResponse(await networkUtils.buildHttpResponse(
+              APIEndPoints.authEndpoints.latestGateInfo,
+              method: HttpMethod.GET)));
+      if (gateAccessModel.value.isInside != null) {
+        isInside.value = gateAccessModel.value.isInside!;
+      }
+      print("${isInside.value} deneme");
+      if (gateAccessModel.value.lastEntry != null &&
+          gateAccessModel.value.lastExit != null) {
+        entryTime.value = gateAccessModel.value.lastEntry!;
+        exitTime.value = gateAccessModel.value.lastExit!;
+      } else if (gateAccessModel.value.lastEntry != null &&
+          gateAccessModel.value.lastExit == null) {
+        entryTime.value = gateAccessModel.value.lastEntry!;
+      }
+    } catch (e) {
+      print("${isInside.value} deneme");
+      entryTime.value = "N/A";
+      exitTime.value = "N/A";
+      print("Veri gelmedi.");
     }
   }
 }

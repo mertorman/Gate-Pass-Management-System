@@ -21,6 +21,9 @@ class _AuthEndPoints {
   final String confirmAccount = 'user/approve/';
   final String rejectAccount = 'user/block/';
   final String getAllApprovedAccounts = 'users/';
+  final String openGate = 'gate/open/';
+  final String exitGate = 'gate/exit/';
+  final String latestGateInfo = 'gate/info/';
   final String logout = "auth/logout/";
 }
 
