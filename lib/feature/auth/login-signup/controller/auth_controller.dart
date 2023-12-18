@@ -34,7 +34,8 @@ class AuthController extends GetxController {
               request: body,
               method: HttpMethod.POST)));
       if (userModel.value.user?.isApproved == true &&
-          userModel.value.user != null) {
+          userModel.value.user != null &&
+          userModel.value.user?.isBlocked == false) {
         newLogin.value = true;
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
@@ -72,23 +73,38 @@ class AuthController extends GetxController {
               request: body,
               method: HttpMethod.POST)));
       if (userModel.value.user?.isApproved == true &&
-          userModel.value.user != null) {
+          userModel.value.user != null &&
+          userModel.value.user?.isBlocked == false) {
         var accessToken = userModel.value.tokens!.access!.token;
         var refreshToken = userModel.value.tokens!.refresh!.token;
+        print(refreshToken);
         newLogin.value = true;
         await box.write('accessToken', accessToken);
         await box.write('refreshToken', refreshToken);
         await box.write(GetStorageKeys.IS_LOGGED_IN, true);
         Get.offAllNamed("/mainwrapper");
       } else {
-        final snackBar = SnackbarContent(
-            "Hesap Onayı",
-            "Hesabınız onay aşamasındadır. Onaylandıktan sonra giriş yapabileceksiniz.",
-            ContentType.warning);
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+        late final snackBar;
+        if (userModel.value.user?.isApproved == false &&
+            userModel.value.user?.isBlocked == false) {
+          snackBar = SnackbarContent(
+              "Waiting Approval",
+              "Your account is under approval. Once approved, you will be able to log in.",
+              ContentType.warning);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        } else if (userModel.value.user?.isBlocked == true &&
+            (userModel.value.user?.isApproved == true ||
+                userModel.value.user?.isApproved == false)) {
+          snackBar = SnackbarContent(
+              "Account Blocked",
+              "Your account has been blocked. Please contact the administrator.",
+              ContentType.warning);
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
       }
     } catch (e) {
       print(e);
@@ -97,9 +113,18 @@ class AuthController extends GetxController {
 
   Future<void> logout() async {
     try {
-      await box.erase();
-      newLogin.value = false;
-      Get.offAllNamed("/login");
+      var refreshToken = box.read('refreshToken');
+      Map body = {"refreshToken": refreshToken};
+      await networkUtils
+          .handleResponse(await networkUtils.buildHttpResponse(
+              APIEndPoints.authEndpoints.logout,
+              request: body,
+              method: HttpMethod.POST))
+          .then((value) async {
+        await box.erase();
+        newLogin.value = false;
+        Get.offAllNamed("/login");
+      });
     } catch (e) {
       print(e);
     }

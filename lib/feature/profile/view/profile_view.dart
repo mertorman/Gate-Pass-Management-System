@@ -141,8 +141,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {
-                          authController.logout();
+                        onPressed: () async{
+                          await authController.logout();
                         },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(

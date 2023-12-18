@@ -6,20 +6,25 @@ class Reguest_ListItem_Widget extends StatefulWidget {
   Reguest_ListItem_Widget(
       {super.key,
       required this.accepted,
+      required this.blocked,
       required this.email,
       required this.name,
       required this.phone,
       this.acceptPressed,
-      required this.getAllUsersWidgetUsed
-      
+      this.rejectPressed,
+      required this.getAllUsersWidgetUsed,
+      required this.getAllBlockedWidgetUsed
       });
 
   bool? accepted;
+  bool? blocked;
   String? email;
   String? name;
   String? phone;
   VoidCallback? acceptPressed;
+  VoidCallback? rejectPressed;
   bool getAllUsersWidgetUsed;
+  bool getAllBlockedWidgetUsed;
 
   @override
   State<Reguest_ListItem_Widget> createState() =>
@@ -33,8 +38,12 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
       children: [
         Container(
           width: context.width() * 0.88,
-          height:  widget.getAllUsersWidgetUsed ? context.height() * 0.1 : context.height() * 0.12,
-          margin: widget.getAllUsersWidgetUsed ? const EdgeInsets.only(top: 15) : const EdgeInsets.only(top: 10),
+          height: widget.getAllUsersWidgetUsed
+              ? context.height() * 0.1
+              : context.height() * 0.12,
+          margin: widget.getAllUsersWidgetUsed
+              ? const EdgeInsets.only(top: 15)
+              : const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Color(0xff4B7FFB).withOpacity(0.1),
@@ -83,30 +92,32 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                   ],
                 ),
               ),
-            widget.getAllUsersWidgetUsed ? SizedBox() : Expanded(
+              Expanded(
                 flex: 1,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: widget.getAllUsersWidgetUsed
+                        ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
                   children: [
+                    ((widget.getAllUsersWidgetUsed && widget.getAllBlockedWidgetUsed) || (widget.getAllUsersWidgetUsed == false && widget.getAllBlockedWidgetUsed==false)) ?
                     ElevatedButton(
-                        onPressed: widget.acceptPressed,
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0, vertical: 5.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            minimumSize: Size(context.width() * 0.08,
-                                context.height() * 0.033),
-                            // maximumSize: Size(95, 30),
-                            backgroundColor: Color(0xFF8186dd)),
-                        child: Text("Accept",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600))),
-                    ElevatedButton(
-                        onPressed: () {},
+                            onPressed: widget.acceptPressed,
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 18.0, vertical: 5.0),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                minimumSize: Size(context.width() * 0.08,
+                                    context.height() * 0.033),
+                                // maximumSize: Size(95, 30),
+                                backgroundColor: Color(0xFF8186dd)),
+                            child: Text( (widget.getAllUsersWidgetUsed && widget.getAllBlockedWidgetUsed) ? "Unblock" : "Accept",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600))) : SizedBox(),
+                    ((widget.getAllUsersWidgetUsed && widget.getAllBlockedWidgetUsed==false) || (widget.getAllUsersWidgetUsed == false && widget.getAllBlockedWidgetUsed==false)) ? ElevatedButton(
+                        onPressed: widget.rejectPressed,
                         style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 18.0, vertical: 5.0),
@@ -117,12 +128,13 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                             // maximumSize: Size(95, 30),
                             backgroundColor: Colors.redAccent),
                         child: Text(
-                          "Reject",
+                         widget.getAllUsersWidgetUsed
+                        ? "Block" : "Reject",
                           style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize: 10,
                               fontWeight: FontWeight.w600),
-                        ))
+                        )) : SizedBox()
                   ],
                 ),
               )
@@ -133,22 +145,24 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeIn,
           width: MediaQuery.of(context).size.width * 0.28,
-          height: widget.getAllUsersWidgetUsed ?  MediaQuery.of(context).size.height * 0.025 :  MediaQuery.of(context).size.height * 0.0255,
+          height: widget.getAllUsersWidgetUsed
+              ? MediaQuery.of(context).size.height * 0.025
+              : MediaQuery.of(context).size.height * 0.0255,
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 16),
           padding: const EdgeInsets.symmetric(horizontal: 24),
           decoration: BoxDecoration(
-            color: widget.accepted == null
+            color: widget.blocked == true
                 ? Colors.red.withOpacity(0.7)
-                : widget.accepted == true
+                : (widget.accepted == true && widget.blocked == false) || widget.getAllBlockedWidgetUsed
                     ? Colors.green.withOpacity(0.7)
                     : Colors.orange.withOpacity(0.7),
             borderRadius: BorderRadius.circular(36),
           ),
           child: Text(
-            widget.accepted == null
+            widget.blocked == true
                 ? "Rejected"
-                : widget.accepted == true
+                : (widget.accepted == true && widget.blocked == false) || widget.getAllBlockedWidgetUsed
                     ? "Approved"
                     : "Waiting",
             style: GoogleFonts.poppins(

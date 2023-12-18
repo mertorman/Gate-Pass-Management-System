@@ -50,6 +50,7 @@ dependencies:
   timer_builder: ^2.0.0
   geolocator: ^10.1.0
   flutter_profile_picture: ^2.0.0
+  flutter_multi_formatter: ^2.12.2
 
 
 dev_dependencies:

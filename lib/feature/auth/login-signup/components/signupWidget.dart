@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
+import 'package:gate_pass_management/feature/profile/view/profile_view.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +14,7 @@ class SignUpWidget extends StatelessWidget {
   PageController pageController;
   AuthController authController = Get.find();
   final box = GetStorage();
+  //final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -34,7 +37,8 @@ class SignUpWidget extends StatelessWidget {
                       child: TextField(
                     controller: authController.nameController,
                     decoration: InputDecoration(
-                        hintText: "Enter Full Name", border: InputBorder.none),
+                        hintText: "Enter Full Name",
+                        border: InputBorder.none),
                     style: GoogleFonts.poppins(fontSize: 16),
                   ))
                 ],
@@ -56,8 +60,16 @@ class SignUpWidget extends StatelessWidget {
                   const Icon(Icons.mail_lock_outlined),
                   20.width,
                   Expanded(
-                      child: TextField(
+                      child: TextFormField(
                     controller: authController.emailController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (!GetUtils.isEmail(value!)) {
+                        return "Email is not valid";
+                      } else {
+                        return null;
+                      }
+                    },
                     decoration: InputDecoration(
                         hintText: "Enter email", border: InputBorder.none),
                     style: GoogleFonts.poppins(fontSize: 16),
@@ -67,7 +79,7 @@ class SignUpWidget extends StatelessWidget {
             ),
           ),
           25.height,
-           Container(
+          Container(
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.07,
             decoration: BoxDecoration(
@@ -81,10 +93,22 @@ class SignUpWidget extends StatelessWidget {
                   const Icon(Icons.phone),
                   20.width,
                   Expanded(
-                      child: TextField(
-                        controller: authController.phoneController,
+                      child: TextFormField(
+                    controller: authController.phoneController,
+                    keyboardType: TextInputType.phone,
+                    autocorrect: false,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (!GetUtils.isPhoneNumber(value!)) {
+                        return "Phone number is not valid";
+                      } else {
+                        return null;
+                      }
+                    },
+                    inputFormatters: [MaskedInputFormatter('###000-####')],
                     decoration: InputDecoration(
-                        hintText: "Enter phone number", border: InputBorder.none),
+                        hintText: "Enter phone number",
+                        border: InputBorder.none),
                     style: GoogleFonts.poppins(fontSize: 16),
                   ))
                 ],
@@ -134,7 +158,8 @@ class SignUpWidget extends StatelessWidget {
                   Expanded(
                       child: TextField(
                     decoration: InputDecoration(
-                        hintText: "Confirm password", border: InputBorder.none),
+                        hintText: "Confirm password",
+                        border: InputBorder.none),
                     style: GoogleFonts.poppins(fontSize: 16),
                   ))
                 ],
@@ -153,11 +178,17 @@ class SignUpWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12))),
               onPressed: () async {
                 await authController.registerWithEmail(context);
+                
+                print(authController.phoneController.text);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Text("Sign Up"), 8.width, Icon(Icons.arrow_forward)],
+                children: [
+                  Text("Sign Up"),
+                  8.width,
+                  Icon(Icons.arrow_forward)
+                ],
               )),
           8.height,
           TextButton(

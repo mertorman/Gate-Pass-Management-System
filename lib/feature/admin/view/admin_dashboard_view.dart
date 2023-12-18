@@ -15,11 +15,23 @@ class AdminDashboard extends StatefulWidget {
   State<AdminDashboard> createState() => _AdminDashboardState();
 }
 
-class _AdminDashboardState extends State<AdminDashboard> {
+class _AdminDashboardState extends State<AdminDashboard>
+    with TickerProviderStateMixin {
   AdminController adminController = Get.put(AdminController());
   bool? accepted;
-    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
+
+  late TabController tabController;
+  @override
+  void initState() {
+    tabController = TabController(
+      initialIndex: 0,
+      length: 2,
+      vsync: this,
+    );
+    super.initState();
+  }
 
   void handleAcceptPressed(int index) {
     adminController.unapprovedAccounts[index].isApproved =
@@ -27,6 +39,30 @@ class _AdminDashboardState extends State<AdminDashboard> {
     adminController.unapprovedAccounts.refresh();
     adminController
         .confirmAccount(adminController.unapprovedAccounts[index].id);
+  }
+
+  void handleUnBlockedPressed(int index) {
+    adminController.allBlockedAccounts[index].isBlocked =
+        !adminController.allBlockedAccounts[index].isBlocked;
+    adminController.allBlockedAccounts.refresh();
+    adminController
+        .unBlockedAccount(adminController.allBlockedAccounts[index].id);
+  }
+
+  void handleRejectPressed(int index, bool unapprovedAccounts) {
+    if (unapprovedAccounts) {
+      adminController.unapprovedAccounts[index].isBlocked =
+          !adminController.unapprovedAccounts[index].isBlocked;
+      adminController.unapprovedAccounts.refresh();
+      adminController.rejectAccount(
+          adminController.unapprovedAccounts[index].id, true);
+    } else {
+      adminController.allapprovedAccounts[index].isBlocked =
+          !adminController.allapprovedAccounts[index].isBlocked;
+      adminController.allapprovedAccounts.refresh();
+      adminController.rejectAccount(
+          adminController.allapprovedAccounts[index].id, false);
+    }
   }
 
   @override
@@ -84,6 +120,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                           TextButton(
                             onPressed: () {
                               adminController.getAllAprovedAccounts();
+                              adminController.getAllBlockedAccounts();
                               showModalBottomSheet(
                                 context: context,
                                 builder: (context) {
@@ -97,68 +134,170 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                             topRight: Radius.circular(18))),
                                     child: Padding(
                                       padding: const EdgeInsets.all(16),
-                                      child: Obx(
-                                        () => Column(
-                                          children: [
-                                            Text(
-                                              'All Approved Accounts',
-                                              style: GoogleFonts.poppins(
-                                                  color: AppColors.primaryColor,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Divider(thickness: 1,color: Colors.grey.withOpacity(0.3),),
-                                            adminController.isLoadingData.value
-                                                ? const Expanded(
-                                                    child: Center(
-                                                        child:
-                                                            CircularProgressIndicator()))
-                                                : Expanded(
-                                                    child: ListView.builder(
-                                                      shrinkWrap: true,
-                                                      itemCount: adminController
-                                                          .allapprovedAccounts
-                                                          .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              10.height,
-                                                              Reguest_ListItem_Widget(
-                                                                  accepted: adminController
-                                                                      .allapprovedAccounts[
-                                                                          index]
-                                                                      .isApproved,
-                                                                  email: adminController
-                                                                      .allapprovedAccounts[
-                                                                          index]
-                                                                      .email,
-                                                                  name: adminController
-                                                                      .allapprovedAccounts[
-                                                                          index]
-                                                                      .username,
-                                                                  phone: adminController
-                                                                      .allapprovedAccounts[
-                                                                          index]
-                                                                      .phone,
-                                                                  getAllUsersWidgetUsed:
-                                                                      true),
-                                                                      
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
+                                      child: Column(
+                                        children: [
+                                          DefaultTabController(
+                                              initialIndex: 0,
+                                              length: 2,
+                                              child: TabBar(
+                                                controller: tabController,
+                                                tabs: [
+                                                  Tab(
+                                                    child: Text(
+                                                      'Approved Accounts',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              color: AppColors
+                                                                  .primaryColor,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                     ),
                                                   ),
-                                          ],
-                                        ),
+                                                  Tab(
+                                                    child: Text(
+                                                      'Blocked Accounts',
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                              color: AppColors
+                                                                  .primaryColor,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                    ),
+                                                  )
+                                                ],
+                                              )),
+                                        
+                                          Expanded(
+                                            child: TabBarView(
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              controller: tabController,
+                                              children: [
+                                                Obx(
+                                                  () => adminController
+                                                          .isLoadingData.value
+                                                      ? Center(
+                                                          child:
+                                                              CircularProgressIndicator())
+                                                      : ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: adminController
+                                                              .allapprovedAccounts
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  10.height,
+                                                                  Reguest_ListItem_Widget(
+                                                                    accepted: adminController
+                                                                        .allapprovedAccounts[
+                                                                            index]
+                                                                        .isApproved,
+                                                                    blocked: adminController
+                                                                        .allapprovedAccounts[
+                                                                            index]
+                                                                        .isBlocked,
+                                                                    rejectPressed: () =>
+                                                                        handleRejectPressed(
+                                                                            index,
+                                                                            false),
+                                                                    email: adminController
+                                                                        .allapprovedAccounts[
+                                                                            index]
+                                                                        .email,
+                                                                    name: adminController
+                                                                        .allapprovedAccounts[
+                                                                            index]
+                                                                        .username,
+                                                                    phone: adminController
+                                                                        .allapprovedAccounts[
+                                                                            index]
+                                                                        .phone,
+                                                                    getAllUsersWidgetUsed:
+                                                                        true,
+                                                                    getAllBlockedWidgetUsed:
+                                                                        false,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                ),
+                                                Obx(
+                                                  () => adminController
+                                                          .isLoadingData.value
+                                                      ? Center(
+                                                          child:
+                                                              CircularProgressIndicator())
+                                                      : ListView.builder(
+                                                          shrinkWrap: true,
+                                                          itemCount: adminController
+                                                              .allBlockedAccounts
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  10.height,
+                                                                  Reguest_ListItem_Widget(
+                                                                    accepted: adminController
+                                                                        .allBlockedAccounts[
+                                                                            index]
+                                                                        .isApproved,
+                                                                    blocked: adminController
+                                                                        .allBlockedAccounts[
+                                                                            index]
+                                                                        .isBlocked,
+                                                                    acceptPressed: () =>
+                                                                        handleUnBlockedPressed(
+                                                                            index),
+                                                                    email: adminController
+                                                                        .allBlockedAccounts[
+                                                                            index]
+                                                                        .email,
+                                                                    name: adminController
+                                                                        .allBlockedAccounts[
+                                                                            index]
+                                                                        .username,
+                                                                    phone: adminController
+                                                                        .allBlockedAccounts[
+                                                                            index]
+                                                                        .phone,
+                                                                    getAllUsersWidgetUsed:
+                                                                        true,
+                                                                    getAllBlockedWidgetUsed:
+                                                                        true,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   );
@@ -194,6 +333,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                     () => Reguest_ListItem_Widget(
                                       accepted: adminController
                                           .unapprovedAccounts[index].isApproved,
+                                      blocked: adminController
+                                          .unapprovedAccounts[index].isBlocked,
+                                      rejectPressed: () =>
+                                          handleRejectPressed(index, true),
                                       acceptPressed: () =>
                                           handleAcceptPressed(index),
                                       email: adminController
@@ -203,6 +346,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                                       phone: adminController
                                           .unapprovedAccounts[index].phone,
                                       getAllUsersWidgetUsed: false,
+                                      getAllBlockedWidgetUsed: false,
                                     ),
                                   ),
                                   15.height,

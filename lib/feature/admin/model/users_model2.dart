@@ -5,6 +5,7 @@ class UserModel2 {
   final String password;
   final String phone;
   bool isApproved;
+  bool isBlocked;
   final String role;
   final String createdAt;
   final String updatedAt;
@@ -16,6 +17,7 @@ class UserModel2 {
     required this.password,
     required this.phone,
     required this.isApproved,
+    required this.isBlocked,
     required this.role,
     required this.createdAt,
     required this.updatedAt,
@@ -29,6 +31,7 @@ class UserModel2 {
       password: json["password"],
       phone: json["phone"],
       isApproved: json["isApproved"],
+      isBlocked: json["isBlocked"] ,
       role: json["role"],
       createdAt: json["createdAt"],
       updatedAt: json["updatedAt"],

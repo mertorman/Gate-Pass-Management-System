@@ -5,6 +5,7 @@
     <application
         android:label="gate_pass_management"
         android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -28,6 +28,7 @@ class User {
   String? password;
   String? phone;
   bool? isApproved;
+  bool? isBlocked;
   String? role;
   String? sId;
   String? createdAt;
@@ -40,6 +41,7 @@ class User {
       this.password,
       this.phone,
       this.isApproved,
+      this.isBlocked,
       this.role,
       this.sId,
       this.createdAt,
@@ -52,6 +54,7 @@ class User {
     password = json['password'];
     phone = json['phone'];
     isApproved = json['isApproved'];
+    isBlocked = json['isBlocked'];
     role = json['role'];
     sId = json['_id'];
     createdAt = json['createdAt'];
@@ -66,6 +69,7 @@ class User {
     data['password'] = this.password;
     data['phone'] = this.phone;
     data['isApproved'] = this.isApproved;
+    data['isBlocked'] = this.isBlocked;
     data['role'] = this.role;
     data['_id'] = this.sId;
     data['createdAt'] = this.createdAt;

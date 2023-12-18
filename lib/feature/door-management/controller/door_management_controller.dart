@@ -122,7 +122,8 @@ class DoorManagementController extends GetxController {
         "username": authController.userModel.value.user?.username,
         "date": formattedDate,
         "time": getSystemTime(),
-        "type": "Logged In",
+        //"type":
+        "message": "Logged In",
       };
     } catch (e) {
       print(e);
