@@ -25,23 +25,25 @@ class NavigationBarBottom extends StatelessWidget {
           activeColor: Colors.grey,
           padding: EdgeInsets.all(12),
           gap: 8,
+          
           tabs: [
             GButton(
               onPressed: () => mainWrapperController.goToTab(0),
               icon: Icons.home_outlined,
               iconActiveColor: Color(0xFF8186dd),
-              iconSize: 27,
+              iconSize: 30,
             ),
             GButton(
                 onPressed: () => mainWrapperController.goToTab(1),
                 icon: Icons.settings_outlined,
                 iconActiveColor: Color(0xFF8186dd),
-                iconSize: 27),
+                iconSize: 30),
             GButton(
                 onPressed: () => mainWrapperController.goToTab(2),
                 icon: Icons.person_2_outlined,
+                
                 iconActiveColor: Color(0xFF8186dd),
-                iconSize: 27),
+                iconSize: 30),
  
           ],
         ),

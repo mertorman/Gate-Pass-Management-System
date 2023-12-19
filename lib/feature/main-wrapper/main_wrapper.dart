@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/feature/components/appbar_component.dart';
 import 'package:gate_pass_management/feature/door-management/view/door_management_view.dart';
@@ -16,12 +17,20 @@ class MainWrapper extends StatelessWidget {
   AuthController authController = Get.find();
   @override
   Widget build(BuildContext context) {
+
+SystemChrome.setSystemUIOverlayStyle(
+  const SystemUiOverlayStyle(
+    systemNavigationBarContrastEnforced: true,
+  ),
+);
+
     return mainWrapperController.obx(
         onLoading: Scaffold(
           body: Center(child: CircularProgressIndicator()),
         ), (state) {
       return Scaffold(
-        appBar:  AppBarWidget(),
+        extendBody: true,
+        appBar: AppBarWidget(),
         bottomNavigationBar: NavigationBarBottom(),
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xffF9F9F9),
@@ -31,8 +40,9 @@ class MainWrapper extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               if (authController.userModel.value.user?.role == 'admin')
-                   ...mainWrapperController.pagesAdmin
-                  else  ...mainWrapperController.pagesUser
+                ...mainWrapperController.pagesAdmin
+              else
+                ...mainWrapperController.pagesUser
             ],
           ),
         ),

@@ -23,7 +23,7 @@ class _AuthEndPoints {
   final String getAllApprovedAccounts = 'users/';
   final String openGate = 'gate/open/';
   final String exitGate = 'gate/exit/';
-  final String latestGateInfo = 'gate/info/';
+  final String latestGateInfo = 'gate/latest-info/';
   final String logout = "auth/logout/";
 }
 

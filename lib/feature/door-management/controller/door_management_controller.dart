@@ -137,11 +137,6 @@ class DoorManagementController extends GetxController with StateMixin {
   Future<void> gateAccess(bool isInside) async {
     try {
       if (isInside) {
-        //String time = getSystemTime(true);
-        //Map bodyClose = {
-        // "exitDate": formattedDate2,
-        //  "exitTime": time,
-        // };
         print(NetworkUtils.box.read("accessToken"));
         setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
             .handleResponse(await networkUtils.buildHttpResponse(
@@ -152,11 +147,6 @@ class DoorManagementController extends GetxController with StateMixin {
         print(this.isInside.value);
         exitTime.value = gateAccessModel.value.entries!.last.exitTime!;
       } else {
-        // String time = getSystemTime(true);
-        // Map bodyOpen = {
-        //   "entryDate": formattedDate2,
-        //   "entryTime": time,
-        // };
         setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
             .handleResponse(await networkUtils.buildHttpResponse(
                 APIEndPoints.authEndpoints.openGate,
@@ -187,7 +177,7 @@ class DoorManagementController extends GetxController with StateMixin {
       if (gateAccessModel.value.isInside != null) {
         isInside.value = gateAccessModel.value.isInside!;
       }
-      print("${isInside.value} deneme");
+
       if (gateAccessModel.value.lastEntry != null &&
           gateAccessModel.value.lastExit != null) {
         entryTime.value = gateAccessModel.value.lastEntry!;
@@ -197,7 +187,6 @@ class DoorManagementController extends GetxController with StateMixin {
         entryTime.value = gateAccessModel.value.lastEntry!;
       }
     } catch (e) {
-      print("${isInside.value} deneme");
       entryTime.value = "N/A";
       exitTime.value = "N/A";
       print("Veri gelmedi.");

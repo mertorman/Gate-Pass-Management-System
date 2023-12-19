@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gate_pass_management/feature/components/appbar_component.dart';
+import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/feature/components/stats_component.dart';
-import 'package:gate_pass_management/feature/user/model/stats_model.dart';
+import 'package:gate_pass_management/feature/user/controller/user_controller.dart';
+import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../components/bottom_navigation_bar.dart';
+import '../../../product/constant/constants.dart';
+import '../components/user_access_widget.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -15,175 +18,207 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
+  UserController userController = Get.put(UserController());
+  AuthController authController = Get.find();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+  final PageController pageController = PageController(initialPage: 0);
+
+  Widget buildEntryList() {
+    return userController.entryHistory!.isEmpty
+        ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Spacer(
+              flex: 2,
+            ),
+            Text(
+              "Latest entries not found",
+              style: GoogleFonts.poppins(
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+            LottieBuilder.asset(
+              "assets/animation/not_found.json",
+              height: context.height() * 0.4,
+              width: context.height() * 0.4,
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ])
+        : ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: userController.entryHistory?.length,
+            physics: ClampingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  UserAccessWidget(
+                    username: authController.userModel.value.user!.username!,
+                    date: userController.entryHistory![index].entryDate!,
+                    time: userController.entryHistory![index].entryTime!
+                        .split(":"),
+                    message: "Logged In",
+                    login: true,
+                  ),
+                  index == userController.entryHistory!.length - 1
+                      ? SizedBox()
+                      : 16.height,
+                ],
+              );
+            },
+          );
+  }
+
+  Widget buildExitList() {
+    return userController.exitHistory!.isEmpty
+        ? Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Spacer(
+              flex: 2,
+            ),
+            Text(
+              "Latest exits not found",
+              style: GoogleFonts.poppins(
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+            LottieBuilder.asset(
+              "assets/animation/not_found.json",
+              height: context.height() * 0.4,
+              width: context.height() * 0.4,
+            ),
+            Spacer(
+              flex: 1,
+            ),
+          ])
+        : ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: userController.exitHistory?.length,
+            physics: ClampingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return Column(
+                children: [
+                  UserAccessWidget(
+                      username: authController.userModel.value.user!.username!,
+                      date: userController.exitHistory![index].exitDate!,
+                      time: userController.exitHistory![index].exitTime!
+                          .split(":"),
+                      message: "Exit Out",
+                      login: false),
+                  index == userController.exitHistory!.length - 1
+                      ? SizedBox()
+                      : 16.height,
+                ],
+              );
+            },
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffF9F9F9),
-      body: SingleChildScrollView(
-        child: SafeArea(
-            child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              GridView.builder(
-                itemCount: UserStatsModels.userStatsModels.length,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(8.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: (1 / .73),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 24,
-                    crossAxisSpacing: 12),
-                itemBuilder: (context, index) {
-                  return StatsWidget(
-                      title: UserStatsModels.userStatsModels[index].title!,
-                      number: UserStatsModels.userStatsModels[index].number!,
-                      color: UserStatsModels.userStatsModels[index].color);
-                },
-              ),
-              24.height,
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return userController
+        .obx(onLoading: Center(child: CircularProgressIndicator()), (state) {
+      return Scaffold(
+        extendBody: true,
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xffF9F9F9),
+        body: RefreshIndicator(
+          color: AppColors.primaryColor,
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            userController.onInit();
+          },
+          child: SafeArea(
+              child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child: Column(
+              children: [
+                GridView.builder(
+                  itemCount: 2,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: (1 / .73),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 24,
+                      crossAxisSpacing: 12),
+                  itemBuilder: (context, index) {
+                    return StatsWidget(
+                        title: index == 0 ? "Total Entries" : "Total Exits",
+                        number: index == 0 ? userController.entryHistory!.length.toString() : userController.exitHistory!.length.toString(),
+                        color: index == 0 ? Colors.green.shade300 : Colors.deepPurple.shade300);
+                  },
+                ),
+                24.height,
+                Expanded(
+                  child: Column(
                     children: [
-                      Text(
-                        "Recent Visits (Last 10)",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600, fontSize: 16),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return Container(
-                                height: context.height() / 1.25,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                   borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12), topRight: Radius.circular(12))
-                                ),
-                              );
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              pageController.previousPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut);
                             },
-                          );
+                            child: Obx(
+                              () => Text(
+                                "Latest Entries",
+                                style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: userController.currentPage == 1
+                                        ? Colors.grey.withOpacity(0.7)
+                                        : null),
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              pageController.nextPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut);
+                            },
+                            child: Obx(
+                              () => Text(
+                                "Latest Exits",
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: userController.currentPage == 0
+                                      ? Colors.grey.withOpacity(0.7)
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      12.height,
+                      Expanded(
+                          child: PageView(
+                        controller: pageController,
+                        onPageChanged: (index) {
+                          userController.currentPage.value = index;
                         },
-                        child: Text(
-                          "View All",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w600, fontSize: 14),
-                        ),
-                      )
+                        physics: NeverScrollableScrollPhysics(),
+                        children: [
+                          buildEntryList(),
+                          buildExitList(),
+                        ],
+                      )),
                     ],
                   ),
-                  12.height,
-                  Stack(
-                    children: [
-                      Container(
-                        width: context.width() * 0.88,
-                        height: context.height() * 0.09,
-                        margin: const EdgeInsets.only(top: 16),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xff4B7FFB).withOpacity(0.1),
-                            border: Border.all(
-                                color: Color(0xff4B7FFB).withOpacity(0.2),
-                                width: 1)),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: const Center(
-                                  child: CircleAvatar(
-                                      radius: 26,
-                                      foregroundImage:
-                                          AssetImage("assets/login.png")),
-                                ),
-                              ),
-                              12.width,
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Elvan Duman",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                          color: Color(0xff1E1C61),
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 15),
-                                    ),
-                                    Text(
-                                      "Logged In",
-                                      style: GoogleFonts.poppins(fontSize: 12,color: Color(0xff1E1C61).withOpacity(0.7)),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '14',
-                                      style: const TextStyle(
-                                          color: Color(0xFF3b67b5),
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          bottom: 12, left: 0),
-                                      child: Text(
-                                          ':56', //Dinamik hale getirelecek.
-                                          style: TextStyle(
-                                              color: Color(0xFF3b67b5),
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeIn,
-                        width: MediaQuery.of(context).size.width * 0.28,
-                        height: MediaQuery.of(context).size.height * 0.0255,
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.only(left: 13),
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(36),
-                        ),
-                        child: Text(
-                          "22.10.2023",
-                          style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        )),
-      ),
-    );
+                ),
+              ],
+            ),
+          )),
+        ),
+      );
+    });
   }
 }

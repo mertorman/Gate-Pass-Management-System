@@ -5,7 +5,7 @@ class StatsModel {
   String? title;
   String? number;
   Color color;
-  StatsModel({required this.title, required this.number,required this.color});
+  StatsModel({required this.title, this.number,required this.color});
 }
 
 class StatsModels extends GetxController {
