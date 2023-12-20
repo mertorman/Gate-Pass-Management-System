@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 
 class StatsModel {
   String? title;
@@ -8,11 +8,11 @@ class StatsModel {
   StatsModel({required this.title, this.number,required this.color});
 }
 
-class StatsModels extends GetxController {
+class StatsModels {
   static final List<StatsModel> statsModels = [
-    StatsModel(title: "Total Employess", number: "05",color: Colors.green.shade300),
-    StatsModel(title: "Total Visitors", number: "05",color: Colors.deepPurple.shade300),
-    StatsModel(title: "Total Pre Registers", number: "05",color: Colors.deepPurple),
-    StatsModel(title: "Today's Check in", number: "05",color: Colors.deepOrange.shade300)
+    StatsModel(title: "Total Verified Users", number: "05",color: Colors.green.shade300),
+    StatsModel(title: "Registration Requests", number: "05",color: Colors.deepPurple.shade300),
+    StatsModel(title: "Total Blocked Users", number: "05",color: Colors.deepPurple),
+    StatsModel(title: "Total Entries/Exist", number: "05",color: Colors.deepOrange.shade300)
   ];
 }

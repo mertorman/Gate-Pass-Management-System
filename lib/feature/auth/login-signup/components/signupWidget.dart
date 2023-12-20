@@ -179,7 +179,6 @@ class SignUpWidget extends StatelessWidget {
               onPressed: () async {
                 await authController.registerWithEmail(context);
                 
-                print(authController.phoneController.text);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

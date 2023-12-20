@@ -149,7 +149,9 @@ class _UserPageState extends State<UserPage> {
                     return StatsWidget(
                         title: index == 0 ? "Total Entries" : "Total Exits",
                         number: index == 0 ? userController.entryHistory!.length.toString() : userController.exitHistory!.length.toString(),
-                        color: index == 0 ? Colors.green.shade300 : Colors.deepPurple.shade300);
+                        color: index == 0 ? Colors.green.shade300 : Colors.deepPurple.shade300,
+                        index: index,
+                        );
                   },
                 ),
                 24.height,

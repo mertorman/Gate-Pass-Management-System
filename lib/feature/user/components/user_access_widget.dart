@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -44,10 +45,13 @@ class UserAccessWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: const Center(
-                        child: CircleAvatar(
-                            radius: 26,
-                            foregroundImage: AssetImage("assets/login.png")),
+                      child:  Center(
+                        child: ProfilePicture(
+                        name: '${username}',
+                        radius: 26,
+                        fontsize: 19,
+                        tooltip: true,
+                      )
                       ),
                     ),
                     12.width,

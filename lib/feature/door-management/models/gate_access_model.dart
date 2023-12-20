@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class GateAccessModel {
   final String? userId;
   final String? username;
@@ -23,8 +25,8 @@ class GateAccessModel {
     return GateAccessModel(
       userId: json['access']['userId'],
       username: json['access']['username'],
-      entries: (json['access']['entries'] as List<dynamic>)
-          .map((entry) => Entry.fromJson(entry))
+      entries: (json['access']['entries'] as List<dynamic>?)
+          ?.map((entry) => Entry.fromJson(entry))
           .toList(),
       isInside: json['access']['isInside'],
       id: json['access']['_id'],
@@ -33,6 +35,25 @@ class GateAccessModel {
       lastExit: json['lastExit'],
     );
   }
+
+  factory GateAccessModel.fromAllInfo(Map<String, dynamic> json) {
+
+
+    return GateAccessModel(
+      id: json['_id'],
+      userId: json['userId'],
+      username: json['username'],
+      entries: List<Entry>.from(json["entries"].map((entry) => Entry.fromJson(entry))),
+      isInside: json['isInside'],
+    );
+  }
+
+  /* static List<GateAccessModel> userListFromJson(Map<String, dynamic> jsonString) {
+    List<Map<String, dynamic>> jsonDataList = jsonString;
+    return jsonDataList
+        .map((user) => GateAccessModel.fromAllInfo(user))
+        .toList();
+  }*/
 
   factory GateAccessModel.fromAccess(Map<String, dynamic> json) {
     return GateAccessModel(

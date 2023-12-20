@@ -102,6 +102,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                         title: StatsModels.statsModels[index].title!,
                         number: StatsModels.statsModels[index].number!,
                         color: StatsModels.statsModels[index].color,
+                        index: index,
                       );
                     },
                   ),

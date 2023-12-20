@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -52,11 +53,13 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(children: [
-              const Center(
-                child: CircleAvatar(
-                  radius: 28,
-                  foregroundImage: AssetImage("assets/login.png"),
-                ),
+              Center(
+                child: ProfilePicture(
+                        name: '${widget.name}',
+                        radius: 27,
+                        fontsize: 19,
+                        tooltip: true,
+                      )
               ),
               15.width,
               Expanded(
@@ -79,7 +82,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
-                            fontSize: 12,
+                            fontSize: 12.5,
                             color: Color(0xff1E1C61).withOpacity(0.7))),
                     8.height,
                     Text("${widget.phone}",
@@ -87,7 +90,7 @@ class _Reguest_ListItem_WidgetState extends State<Reguest_ListItem_Widget> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.poppins(
-                            fontSize: 12,
+                            fontSize: 12.5,
                             color: Color(0xff1E1C61).withOpacity(0.7))),
                   ],
                 ),
