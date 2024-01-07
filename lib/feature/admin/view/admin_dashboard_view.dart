@@ -90,7 +90,7 @@ class _AdminDashboardState extends State<AdminDashboard>
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     padding: const EdgeInsets.all(8.0),
-                    itemCount: StatsModels.statsModels.length,
+                    itemCount: adminController.statsModels.length,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                             childAspectRatio: (1 / .73),
@@ -99,9 +99,9 @@ class _AdminDashboardState extends State<AdminDashboard>
                             crossAxisSpacing: 12),
                     itemBuilder: (context, index) {
                       return StatsWidget(
-                        title: StatsModels.statsModels[index].title!,
-                        number: StatsModels.statsModels[index].number!,
-                        color: StatsModels.statsModels[index].color,
+                        title: adminController.statsModels[index].title!,
+                        number: adminController.statsModels[index].number!,
+                        color: adminController.statsModels[index].color,
                         index: index,
                       );
                     },

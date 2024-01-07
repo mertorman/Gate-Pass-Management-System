@@ -9,7 +9,7 @@ class AppColors {
 }
 
 class APIEndPoints {
-  static final String baseUrl = 'http://107.23.189.238:8080/';
+  static final String baseUrl = 'http://34.227.53.69:8080/';
   static _AuthEndPoints authEndpoints = _AuthEndPoints();
 }
 

@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/admin/model/users_model2.dart';
 import 'package:get/get.dart';
 import '../../../network/NetworkUtils.dart';
 import '../../../product/constant/constants.dart';
 import '../../door-management/models/gate_access_model.dart';
+import '../model/stats_model.dart';
 
 class AdminController extends GetxController with StateMixin {
   RxList<UserModel2> unapprovedAccounts = RxList<UserModel2>([]);
@@ -12,18 +14,38 @@ class AdminController extends GetxController with StateMixin {
   final accepted = Rxn<bool>();
   RxBool isLoadingData = false.obs;
 
-  final Map<String, List<Entry>> allEntryHistory = {};
-  final Map<String, List<Entry>> allExitHistory = {};
+  final Map<String, RxList<Entry>> allEntryHistory = {};
+  final Map<String, RxList<Entry>> allExitHistory = {};
   Rx<GateAccessModel> gateAccessModel = GateAccessModel().obs;
   set setGateAccessModel(GateAccessModel value) =>
       gateAccessModel.value = value;
 
   RxList<GateAccessModel> gateAccessList = <GateAccessModel>[].obs;
 
+  late RxList<StatsModel> statsModels;
+
   @override
   void onInit() async {
     super.onInit();
     await unapprovedGetAccounts();
+    statsModels = RxList([
+      StatsModel(
+          title: "Total Verified Users",
+          number: "${allapprovedAccounts.length}",
+          color: Colors.green.shade300),
+      StatsModel(
+          title: "Registration Requests",
+          number: "${unapprovedAccounts.length}",
+          color: Colors.deepPurple.shade300),
+      StatsModel(
+          title: "Total Blocked Users",
+          number: "${allBlockedAccounts.length}",
+          color: Colors.deepPurple),
+      StatsModel(
+          title: "Total Entries/Exist",
+          number: "${(allEntryHistory.length)}",
+          color: Colors.deepOrange.shade300)
+    ]);
   }
 
   Future<void> unapprovedGetAccounts() async {
@@ -163,16 +185,18 @@ class AdminController extends GetxController with StateMixin {
 
         // Eğer kullanıcı daha önce eklenmediyse, yeni bir listeyi başlat
         if (!allEntryHistory.containsKey(id)) {
-          allEntryHistory[id] = [];
+          allEntryHistory[id] = RxList();
           gateAccess.entries?.reversed.forEach((entry) {
             allEntryHistory[id]!.add(entry);
+            refresh();
           });
         }
         if (!allExitHistory.containsKey(id)) {
-          allExitHistory[id] = [];
+          allExitHistory[id] = RxList();
           gateAccess.entries?.reversed.forEach((entry) {
             if (entry.exitDate != null && entry.exitTime != null) {
               allExitHistory[id]!.add(entry);
+              refresh();
             }
           });
         }
