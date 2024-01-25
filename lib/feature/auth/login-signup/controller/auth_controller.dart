@@ -15,6 +15,7 @@ class AuthController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
   RxBool newLogin = RxBool(false);
   Rx<UserModel> userModel = UserModel().obs;
@@ -55,6 +56,7 @@ class AuthController extends GetxController {
         emailController.clear();
         phoneController.clear();
         passwordController.clear();
+        confirmPasswordController.clear();
       }
     } catch (e) {
       print(e);

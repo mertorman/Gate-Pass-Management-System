@@ -63,7 +63,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 title: 'About ParkEasy',
                 textColor: Colors.black,
                 text:
-                    'Developers:\n\nMert Orman => mertorman22@gmail.com\nEren Deveci => erendv@hotmail.com\n\nIt cannot be copied or changed without permission.\n\nParkEasy v1.0.0',
+                    'Developers:\n\nMert Orman => mertorman22@gmail.com\nEren Deveci => erendv@hotmail.com\n\nParkEasy v1.0.0',
               );
             },
             child: Container(

@@ -2,12 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/loginWidget.dart';
 import 'package:gate_pass_management/feature/auth/login-signup/components/signupWidget.dart';
-import 'package:gate_pass_management/feature/auth/login-signup/controller/auth_controller.dart';
 import 'package:gate_pass_management/product/constant/constants.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
-//import 'package:rive/rive.dart' as rv;
 import 'package:kartal/kartal.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,7 +16,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final PageController pageController = PageController(initialPage: 0);
- // AuthController authController = Get.put(AuthController(),permanent: true);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,11 +53,12 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  25.height,
+                  30.height,
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Spacer(flex: 2,),
                       AnimatedContainer(
                         duration: Duration(milliseconds: 300),
                         height: context.general.isKeyBoardOpen
@@ -72,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                           AppImages.loginImage,
                         ),
                       ),
+                      Spacer(flex: 2,),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: SizedBox(
@@ -105,12 +103,12 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                      )
+                      ),
+                      Spacer(flex: 1,)
                     ],
                   ),
-                  30.height,
+                  20.height,
                   Expanded(
-                    
                     child: PageView(
                       controller: pageController,
                       physics: const NeverScrollableScrollPhysics(),
@@ -124,7 +122,6 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-   
                 ],
               ),
             ),

@@ -157,6 +157,8 @@ class SignUpWidget extends StatelessWidget {
                   20.width,
                   Expanded(
                       child: TextField(
+                    controller: authController.confirmPasswordController,
+                    obscureText: true,
                     decoration: InputDecoration(
                         hintText: "Confirm password",
                         border: InputBorder.none),

@@ -23,7 +23,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Spacer(flex: 1,),
+        Spacer(flex: 2,),
         Container(
           width: context.width() * 0.8,
           height: context.height() * 0.07,

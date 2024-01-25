@@ -14,9 +14,9 @@ class DoorManagementController extends GetxController with StateMixin {
   AuthController authController = Get.find();
   late double userLatitude;
   late double userLongitude;
-  final double circleLatitude = 37.462380; // Dairenin enlemi
-  final double circleLongitude = 30.604447; // Dairenin boylamı
-  final double circleRadius = 71.40; // Dairenin yarı çapı
+  final double circleLatitude = 37.462414; // Dairenin enlemi
+  final double circleLongitude = 30.604458; // Dairenin boylamı
+  final double circleRadius = 150.08; // Dairenin yarı çapı
   RxBool isInsideCircle = RxBool(false);
   DateTime now = DateTime.now();
   late String formattedDate;
@@ -93,22 +93,29 @@ class DoorManagementController extends GetxController with StateMixin {
       userLongitude = position.longitude;
 
       // ignore: use_build_context_synchronously
-      _checkIfUserInsideCircle(context);
+      await _checkIfUserInsideCircle(context);
       print("$userLatitude ,, $userLongitude");
     } catch (e) {
       print('Konum alınamıyor: $e');
     }
   }
 
-  void _checkIfUserInsideCircle(BuildContext context) async {
+  Future<double> getDistance() async {
     double distance = Geolocator.distanceBetween(
       userLatitude,
       userLongitude,
       circleLatitude,
       circleLongitude,
     );
+    return distance;
+  }
+
+  Future<void> _checkIfUserInsideCircle(BuildContext context) async {
+    double distance = await getDistance();
 
     isInsideCircle.value = distance <= circleRadius;
+
+    print("Konum Bilgisi: ${isInsideCircle.value}");
     if (isInsideCircle.value) {
       final snackBar = SnackbarContent("You are in location!",
           "The door is opening...", ContentType.success);
@@ -137,14 +144,13 @@ class DoorManagementController extends GetxController with StateMixin {
   Future<void> gateAccess(bool isInside) async {
     try {
       if (isInside) {
-        print(NetworkUtils.box.read("accessToken"));
         setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
             .handleResponse(await networkUtils.buildHttpResponse(
                 APIEndPoints.authEndpoints.exitGate,
                 request: {},
                 method: HttpMethod.PATCH)));
         this.isInside.value = gateAccessModel.value.isInside!;
-        print(this.isInside.value);
+
         exitTime.value = gateAccessModel.value.entries!.last.exitTime!;
       } else {
         setGateAccessModel = GateAccessModel.fromAccess(await networkUtils
@@ -155,7 +161,7 @@ class DoorManagementController extends GetxController with StateMixin {
         if (gateAccessModel.value.isInside != null) {
           this.isInside.value = gateAccessModel.value.isInside!;
         }
-        print(this.isInside.value);
+
         if (gateAccessModel.value.entries!.last.exitTime == null) {
           exitTime.value = 'N/A';
         }

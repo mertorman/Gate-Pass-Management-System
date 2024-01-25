@@ -11,12 +11,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await initialize();
-  final box = GetStorage();
+  //final box = GetStorage();
   //box.erase();
-  //print(box.read('accessToken')+" denemedelerlrr");
   Get.put(AuthController(), permanent: true);
-  //box.remove('accessToken');
-  //box.remove('refreshToken');
   runApp(const MyApp());
 }
 
@@ -42,7 +39,6 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      //home: MainWrapper(),
       initialRoute: "/splashpage",
       getPages: AppRoutes.routes,
     );

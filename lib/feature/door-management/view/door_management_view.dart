@@ -49,7 +49,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Good Morning,",
+                      Text("Have a Nice Day!",
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: GoogleFonts.poppins(
@@ -103,7 +103,7 @@ class _DoorManagementPageState extends State<DoorManagementPage> {
                           ),
                         ),
                         Text(
-                          "Bucak Technology Faculty",
+                          "Bucak Bilgisayar ve Bilişim Fakültesi",
                           style: GoogleFonts.poppins(color: Color(0xff1E1C61)),
                         ),
                       ],

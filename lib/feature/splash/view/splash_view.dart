@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gate_pass_management/product/constant/constants.dart';
 import 'package:get/get.dart' hide ContextExtensionss;
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../auth/login-signup/controller/auth_controller.dart';
@@ -36,19 +37,36 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: context.height(),
-        width: context.width(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //Image.asset('images/qr-menu.png', height: 150, width: 150),
-            16.height,
-            Text("ParkEasy", style: boldTextStyle(size: 24)),
-          ],
-        ),
-      ).center(),
+    return Container(
+      decoration: BoxDecoration(gradient: LinearGradient(
+       begin: Alignment.topCenter, colors: [Color(0XFF8BC6EC), Color(0XFF9599E2)])),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
+          height: context.height(),
+          width: context.width(),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                RichText(
+                      text: TextSpan(children: [
+                    TextSpan(
+                        text: "Park",
+                        style: GoogleFonts.poppins(
+                            fontSize: 30, fontWeight: FontWeight.bold)),
+                    TextSpan(
+                        text: "Easy",
+                        style: GoogleFonts.poppins(
+                            fontSize: 30,
+                            color: AppColors.primaryColor.withOpacity(0.9),
+                            fontWeight: FontWeight.bold))
+                  ])),
+              ],
+            ),
+          ),
+        ).center(),
+      ),
     );
   }
 }
